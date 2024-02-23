@@ -15,6 +15,8 @@ class HSSGetPermissonClass:
     
     async def get_permission(self) -> list:
         UserData = await self.get_data()
+        if UserData['body']['schools'] == []:
+            return None
         return UserData['body']['schools']
 
 class HSSGetUserDatasClass:
@@ -31,6 +33,8 @@ class HSSGetUserDatasClass:
     async def GetIdData(self,id) -> int:
         url = await apiurl_lists.make_url(1,id)
         UserData = await self.get_data(url)
+        if UserData['body']['data'] == None:
+            return None
         return UserData['body']['data']
     
 
@@ -44,6 +48,7 @@ class HSSGetSchoolDatasClass:
         self.DayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
         self.toke = token
         self.schoolid = schoolid
+        
 
     async def get_data(self) -> dict:
         url = await apiurl_lists.make_url(0,self.schoolid)
@@ -75,55 +80,64 @@ class HSSGetSchoolDatasClass:
         ]
     }
     
-
-    async def grade(self) -> int:
+    async def search_class(self,grade,classname) -> int:
         UserData = await self.get_data()
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
+        for number in range(len(UserData['userDatas'])):
+            if UserData['userDatas'][number]['grade'] == grade and UserData['userDatas'][number]['class'] == classname:
+                return number    
+        else:
+            return None
+    async def grade(self,number) -> int:
+        UserData = await self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        if UserData['grade'] == None:
+            return None
         return UserData['grade']
     
-    async def clsasname(self) -> str:
+    async def classname(self,number) -> str:
         UserData = await self.get_data()
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
+        UserData = UserData['userDatas'][number]
+        if UserData['class'] == None:
+            return None
         return UserData['class']
     
-    async def DayOfWeek_timelineData(self,name) -> list[dict]:
+    async def DayOfWeek_timelineData(self,number,name) -> list[dict]:
         if name not in self.DayOfWeek:
             return None
         UserData = await self.get_data()
-        
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
+        if UserData['userDatas'][number]['timelineData'] == None:
+            return None
+        UserData = UserData['userDatas'][number]
         return UserData['timelineData'][name]
     
-    async def DayOfWeek_timelineData_default(self,name) -> list[dict]:
+    async def DayOfWeek_timelineData_default(self,number,name) -> list[dict]:
         if name not in self.DayOfWeek:
             return None
         UserData = await self.get_data()
-        
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
+        UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineData'][name]
     
-    async def eventData(self,name) -> list[dict]:
-        if name not in self.DayOfWeek:
-            return None
+    async def eventData(self,number,name) -> list[dict]:
         UserData = await self.get_data()
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
-    
+        UserData = UserData['userDatas'][number]
         return UserData['eventData'][name]
 
-    async def defaultTimelineIndex(self) -> int:
+    async def defaultTimelineIndex(self,number) -> int:
         UserData = await self.get_data()
-        if  not  UserData['userDatas'] :
+        if UserData['userDatas'] == []:
             return None
-        UserData = UserData['userDatas'][0]
+        UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
     
