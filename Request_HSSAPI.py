@@ -20,6 +20,7 @@ def post_with_token(url, token):
         'Authorization':f"Bearer {token}"
     }
     response = requests.post(url, headers=headers)
+
     return response
 
 def delete_with_token(url, token):
