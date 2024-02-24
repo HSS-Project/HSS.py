@@ -1,35 +1,33 @@
-from HSS import HSSGetPermissonClass, HSSGetUserDatasClass, HSSGetSchoolDatasClass
+from HSS import User, School
 async def main():
-    token = "oZEoqckrVKTEYtYG_IeqnfIutD3D0oF7Lz0gz_8KKDE"
-
-    # 学校の情報を取得
-    school = HSSGetPermissonClass(token)
-    schoolid = await school.get_permission()
-    print(schoolid)
+    token = "孤独のバカがTOKEN貼り付け"
+    
 
     # ユーザーの情報を取得
-    user = HSSGetUserDatasClass(token)
-    userdata = await user.GetmeData()
+    user = User(token)
+    userdata = user.get_me()
+    schoolid = user.get_permission()
+    print(schoolid)
     print(userdata)
 
-    userdata = await user.GetIdData(6389849732839113728)
+    userdata = user.get_id(0000000000000000)
     print(userdata)
 
     # # 学校の情報を取得
-    school = HSSGetSchoolDatasClass(token,schoolid[0])
-    grade = await school.grade()
+    school = School(token,schoolid[0])
+    grade = school.grade(0)
     print(grade)
 
-    clsasname = await school.clsasname()
+    clsasname = school.classname(0)
     print(clsasname)
 
-    mon = await school.DayOfWeek_timelineData("mon")
+    mon = school.get_timeline(0, "mon")
     print(mon)
 
-    mon = await school.DayOfWeek_timelineData_default("tue")
+    mon = school.get_default_timeline(0, "tue")
     print(mon)
 
-    index = await school.defaultTimelineIndex()
+    index = school.default_TimelineIndex(0)
     print(index)
 if __name__ == "__main__":
     import asyncio
