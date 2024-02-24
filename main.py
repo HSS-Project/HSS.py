@@ -1,8 +1,7 @@
 from HSS import User, School
 async def main():
-    token = "孤独のバカがTOKEN貼り付け"
+    token = "ne4iliC2NLKNIeSvZjpNGUcYiEUhGdIaAM8Ainjj4_Q"
     
-
 
     # ユーザーの情報を取得
     user = User(token)
@@ -11,7 +10,7 @@ async def main():
     print(schoolid)
     print(userdata)
 
-    userdata = user.get_id(0000000000000000)
+    userdata = user.get_id(6392857473606222848)
     print(userdata)
 
     # # 学校の情報を取得
@@ -28,7 +27,7 @@ async def main():
     mon = school.get_default_timeline(0, "tue")
     print(mon)
 
-    index = school.default_TimelineIndex(0)
+    index = school.default_timelineindex(0)
     print(index)
 if __name__ == "__main__":
     import asyncio

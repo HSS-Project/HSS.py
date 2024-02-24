@@ -106,4 +106,29 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
+    def patch_timetable(self,grade:int,clas:int,date:str,index:int,name:str,place=""):
+
+        """
+            一週間の時間割変更するやつです。
+    
+         ----------
+        :param grade:変更する学年
+        :param clas :     変更するクラス
+        :param date : 
+        """    
+        data ={
+        "schoolId": self.schoolid,
+        "bodies" : [{"headKey" : "userDatas",
+        "key" : "timelineData",
+            "grade" : grade,
+            "class" : clas,
+            "date" : date,         
+            "index" :index,
+            "value" : {
+                "name" : name,
+                "place" : place,
+        }}]}  
+        url= "https://hss-dev.aknet.tech/v1/school"
+        response = Request_HSSAPI.patch_with_token(url, self.toke,data)
+
     
