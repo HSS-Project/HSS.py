@@ -1,6 +1,6 @@
 from HSS import User, School
 async def main():
-    token = "SuP3r_S3CretAcCe2ST0k3n"
+    token = "孤独のバカでTOKEN貼りました"
     
 
     # ユーザーの情報を取得
