@@ -2,9 +2,6 @@ from HSS import User, School
 async def main():
     token = "ne4iliC2NLKNIeSvZjpNGUcYiEUhGdIaAM8Ainjj4_Q"
     
-
-    # ユーザーの情報を取
-    
     user = User(token)
     userdata = user.get_me()
     schoolid = user.get_permission()
