@@ -8,18 +8,18 @@ def get_with_token(url, token):
     response = requests.get(url, headers=headers)
     return response
 
-def patch_with_token(url, token):
+def patch_with_token(url, token, data ):
     headers = {
         'Authorization':f"Bearer {token}"
     }
-    response = requests.patch(url, headers=headers)
+    response = requests.patch(url, headers=headers, json=data)
     return response
 
-def post_with_token(url, token):
+def post_with_token(url, token, data):
     headers = {
         'Authorization':f"Bearer {token}"
     }
-    response = requests.post(url, headers=headers)
+    response = requests.post(url, headers=headers, json=data)
 
     return response
 
