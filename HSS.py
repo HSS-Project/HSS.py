@@ -106,15 +106,18 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
-    def patch_timetable(self,grade:int,clas:int,date:str,index:int,name:str,place=""):
+    def patch_timetable(self,grade:int,clas:int,date:str,index:int,name:str,place="")-> str: 
 
         """
-            一週間の時間割変更するやつです。
+        一週間の時間割変更するやつです。
     
-         ----------
-        :param grade:変更する学年
-        :param clas :     変更するクラス
-        :param date : 
+        ----------
+        :param grade: 変更する学年
+        :param clas : 変更するクラス
+        :param date : 月:"mon",火:"tue","水":"wed",木:"thu",金:"fri",土:"sat",日:"sun"
+        :param index: 変更する時数
+        :param name : 教科名
+        :param place: 授業場所
         """    
         data ={
         "schoolId": self.schoolid,
