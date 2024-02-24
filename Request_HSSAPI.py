@@ -1,28 +1,28 @@
 import requests
 
 
-async def get_with_token(url, token):
+def get_with_token(url, token):
     headers = {
         'Authorization':f"Bearer {token}"
     }
     response = requests.get(url, headers=headers)
     return response
 
-async def patch_with_token(url, token):
+def patch_with_token(url, token):
     headers = {
         'Authorization':f"Bearer {token}"
     }
     response = requests.patch(url, headers=headers)
     return response
 
-async def post_with_token(url, token):
+def post_with_token(url, token):
     headers = {
         'Authorization':f"Bearer {token}"
     }
     response = requests.post(url, headers=headers)
     return response
 
-async def delete_with_token(url, token):
+def delete_with_token(url, token):
     headers = {
         'Authorization':f"Bearer {token}"
     }

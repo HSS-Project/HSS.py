@@ -4,7 +4,7 @@ class ErrorPrint:
     def __init__(self):
         pass
 
-    async def handle_http_error(response):
+    def handle_http_error(response):
         if response.status_code == 200:
             # 200 OKの処理
             return False

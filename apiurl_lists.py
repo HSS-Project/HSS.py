@@ -10,7 +10,7 @@ HSS_AP_KEY = [
 ]
 
 
-async def make_url(mode,id=None):
+def make_url(mode,id=None):
     if mode == 0 and id != None:
         id = str(id)
         return BASEURL + "/"+HSS_AP_KEY[mode]+"/"+id

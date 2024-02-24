@@ -1,17 +1,17 @@
 from . import errors, apiurl_lists, Request_HSSAPI
 
-class GetUserData:
+class User:
     def __init__(self,token) -> None:
         self.toke = token
 
     async def get_data(self, url) -> dict:
-        response = await Request_HSSAPI.send_request_with_token(url, self.toke)
-        if await errors.ErrorPrint.handle_http_error(response):
+        response = Request_HSSAPI.get_with_token(url, self.toke)
+        if errors.ErrorPrint.handle_http_error(response):
             return None
         return response.json()
     
     async def get_permission(self) -> list:
-        url = await apiurl_lists.make_url(2)
+        url = apiurl_lists.make_url(2)
         UserData = await self.get_data(url)
         if UserData['body']['schools'] == []:
             return None
@@ -19,7 +19,7 @@ class GetUserData:
 
 
     async def get_id(self,id) -> int:
-        url = await apiurl_lists.make_url(1,id)
+        url = apiurl_lists.make_url(1,id)
         UserData = await self.get_data(url)
         if UserData['body']['data'] == None:
             return None
@@ -27,20 +27,20 @@ class GetUserData:
     
 
     async def get_me(self) -> dict:
-        url = await apiurl_lists.make_url(1,"@me")
+        url = apiurl_lists.make_url(1,"@me")
         UserData = await self.get_data(url)
         return UserData['body']['data']
 
-class GetSchoolData:
+class School:
     def __init__(self,token,schoolid) -> None:
         self.DayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
         self.toke = token
         self.schoolid = schoolid
 
     async def get_data(self) -> dict:
-        url = await apiurl_lists.make_url(0,self.schoolid)
-        response = await Request_HSSAPI.send_request_with_token(url, self.toke)
-        if await errors.ErrorPrint.handle_http_error(response):
+        url = apiurl_lists.make_url(0,self.schoolid)
+        response = Request_HSSAPI.get_with_token(url, self.toke)
+        if errors.ErrorPrint.handle_http_error(response):
             return None
         UserData = response.json()
         return UserData['body']['data']
