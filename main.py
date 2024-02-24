@@ -4,8 +4,6 @@ async def main():
     
 
 
-
-
     # ユーザーの情報を取得
     user = User(token)
     userdata = user.get_me()
