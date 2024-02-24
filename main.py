@@ -3,6 +3,9 @@ async def main():
     token = "孤独のバカがTOKEN貼り付け"
     
 
+
+
+
     # ユーザーの情報を取得
     user = User(token)
     userdata = user.get_me()
