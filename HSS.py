@@ -1,4 +1,4 @@
-from . import errors, apiurl_lists, Request_HSSAPI
+import errors, apiurl_lists, Request_HSSAPI
 
 class User:
     def __init__(self,token) -> None:
