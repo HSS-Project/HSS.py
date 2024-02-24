@@ -130,5 +130,6 @@ class School:
         }}]}  
         url= "https://hss-dev.aknet.tech/v1/school"
         response = Request_HSSAPI.patch_with_token(url, self.toke,data)
+        return response
 
     
