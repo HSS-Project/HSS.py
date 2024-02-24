@@ -100,7 +100,7 @@ class School:
         UserData = UserData['userDatas'][number]
         return UserData['eventData'][name]
 
-    def default_TimelineIndex(self,number) -> int:
+    def default_timelineindex(self,number) -> int:
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
