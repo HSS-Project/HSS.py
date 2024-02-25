@@ -106,8 +106,17 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
-    
-    def patch_timetable(self,grade:int,clas:int,date:str,index:int,name:str,place="")-> str: 
+    def return_patch_data(self,id,key,grade,clas,date):
+        return {
+            "schoolId": id,
+            "bodies" : [{"headKey" : "userDatas",
+            "key" : key,
+                "grade" : grade,
+                "class" : clas,
+                "date" : date,   
+            }]}
+        
+    def patch_timetable(self,grade:int,clas:int,date:str,name:str,index=None,place=None)-> str: 
 
         """
         一週間の時間割変更するやつです。
@@ -124,18 +133,12 @@ class School:
         :rtype: json
         :raises APIからのエラー
         """    
-        data ={
-        "schoolId": self.schoolid,
-        "bodies" : [{"headKey" : "userDatas",
-        "key" : "timelineData",
-            "grade" : grade,
-            "class" : clas,
-            "date" : date,         
-            "index" :index,
-            "value" : {
-                "name" : name,
-                "place" : place,
-        }}]}  
+        ch ={"name" : name}
+        if place != None: ch["place"] = place 
+        data = self.return_patch_data(self.schoolid,"timelineData",grade,clas,date)
+        data['bodies'][0]["value"] = ch
+        if index != None:
+            data['bodies'][0]['index'] = (index +1 )
         url= "https://hss-dev.aknet.tech/v1/school"
         response = Request_HSSAPI.patch_with_token(url, self.toke,data)
         if errors.ErrorPrint.handle_http_error(response):
@@ -143,10 +146,10 @@ class School:
         datas = self.get_timeline(0,date)
         return datas
 
-    def patch_homework(self,grade:int,clas:int,date:str,index:int,name:str,istoobig:bool,start:int,end:int,comment="")-> str: 
+    def patch_homework(self,grade:int,clas:int,date:str,name:str,istoobig:bool,start:int,end:int,index=None,comment="")-> str: 
 
         """
-        一週間の時間割変更するやつです。
+        一週間の宿題を変更するやつです。
     
         ----------
         :param grade: 変更する学年
@@ -170,7 +173,6 @@ class School:
             "grade" : grade,
             "class" : clas,
             "date" : date,         
-            "index" :index,
             "value" : {
                 "homework" : [
                     {
@@ -183,6 +185,8 @@ class School:
                         }
                     }
         ]}}]}  
+        if index != None:data['bodies'][0]['index'] = index
+        
         url= "https://hss-dev.aknet.tech/v1/school"
         response = Request_HSSAPI.patch_with_token(url, self.toke,data)
         if errors.ErrorPrint.handle_http_error(response):
@@ -190,5 +194,44 @@ class School:
         datas = self.get_timeline(0,date)
         return datas
 
+    def patch_event(self,grade:int,clas:int,date:str,index,name:str,place="")-> str: 
+
+        """
+        一週間の時間割変更するやつです。
+    
+        ----------
+        :param grade: 変更する学年
+        :param clas : 変更するクラス
+        :param date : 月:"mon",火:"tue","水":"wed",木:"thu",金:"fri",土:"sat",日:"sun"
+        
+        :param index: 変更する時数
+        :param name : 変更するイベント名
+        :param place: イベント場所
+        :param start: 開始時刻
+        :param end  : 終了時刻
+        :param isEndofDay : 終日続くかどうか
+
+        :return: 変更に成功した場合、変更後の時間割
+        :rtype: json
+        :raises APIからのエラー
+        """    
+        data ={
+        "schoolId": self.schoolid,
+        "bodies" : [{"headKey" : "userDatas",
+        "key" : "timelineData",
+            "grade" : grade,
+            "class" : clas,
+            "date" : date,         
+            "index" :index,
+            "value" : {
+                "name" : name,
+                "place" : place,
+        }}]}  
+        url= "https://hss-dev.aknet.tech/v1/school"
+        response = Request_HSSAPI.patch_with_token(url, self.toke,data)
+        if errors.ErrorPrint.handle_http_error(response):
+            return response.text
+        datas = self.get_timeline(0,date)
+        return datas
 
     

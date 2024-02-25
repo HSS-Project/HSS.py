@@ -29,7 +29,7 @@ async def main():
 
     index = school.default_timelineindex(0)
     print(index)
-    rep  =school.patch_timetable(1,1,"mon",4,"孤独は最強","北海道札幌市")
+    rep  =school.patch_timetable(1,1,"mon","孤独は最強",5,"北海道札幌市")
     print(rep)
 if __name__ == "__main__":
     import asyncio
