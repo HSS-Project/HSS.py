@@ -82,7 +82,7 @@ class School:
     token:   トークンを入力します。
     schoolid:   学校IDを入力します。
     """
-    def __init__(self, token, schoolid) -> None:
+    def __init__(self, token, schoolid: int) -> None:
         """
         コンストラクタ
 
@@ -108,4 +108,138 @@ class School:
         UserData = response.json()
         return UserData['body']['data']
 
-    #  他のメソッドについても同様にドキュメンテーションを追加してください。
+# ...
+
+class School:
+    # ...
+
+    def search_class(self, grade, classname) -> int:
+        """
+        指定された学年とクラス名に一致するクラスのインデックスを検索します。
+
+        パラメータ:
+        grade:   検索する学年
+        classname:   検索するクラス名
+
+        戻り値:
+        int:   クラスのインデックス（見つからない場合はNone）
+        """
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        for number in range(len(UserData['userDatas'])):
+            if UserData['userDatas'][number]['grade'] == grade and UserData['userDatas'][number]['class'] == classname:
+                return number
+        else:
+            return None
+
+    def grade(self, number) -> int:
+        """
+        指定されたインデックスのクラスの学年を取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+
+        戻り値:
+        int:   クラスの学年（見つからない場合はNone）
+        """
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        if UserData['grade'] == None:
+            return None
+        return UserData['grade']
+
+    def classname(self, number) -> str:
+        """
+        指定されたインデックスのクラスの名前を取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+
+        戻り値:
+        str:   クラスの名前（見つからない場合はNone）
+        """
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        if UserData['class'] == None:
+            return None
+        return UserData['class']
+
+    def get_timeline(self, number, name) -> list[dict]:
+        """
+        指定されたインデックスのクラスの指定された曜日のタイムラインを取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+        name:   曜日の名前（例: 'mon', 'tue', ...）
+
+        戻り値:
+        list[dict]:   タイムラインデータ（見つからない場合はNone）
+        """
+        if name not in self.DayOfWeek:
+            return None
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        if UserData['userDatas'][number]['timelineData'] == None:
+            return None
+        UserData = UserData['userDatas'][number]
+        return UserData['timelineData'][name]
+
+    def get_default_timeline(self, number, name) -> list[dict]:
+        """
+        指定されたインデックスのクラスの指定された曜日のデフォルトタイムラインを取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+        name:   曜日の名前（例: 'mon', 'tue', ...）
+
+        戻り値:
+        list[dict]:   デフォルトタイムラインデータ（見つからない場合はNone）
+        """
+        if name not in self.DayOfWeek:
+            return None
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        return UserData['defaultTimelineData'][name]
+
+    def get_event(self, number, name) -> list[dict]:
+        """
+        指定されたインデックスのクラスの指定された曜日のイベントを取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+        name:   曜日の名前（例: 'mon', 'tue', ...）
+
+        戻り値:
+        list[dict]:   イベントデータ（見つからない場合はNone）
+        """
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        return UserData['eventData'][name]
+
+    def default_timelineindex(self, number) -> int:
+        """
+        指定されたインデックスのクラスのデフォルトタイムラインのインデックスを取得します。
+
+        パラメータ:
+        number:   クラスのインデックス
+
+        戻り値:
+        int:   デフォルトタイムラインのインデックス（見つからない場合はNone）
+        """
+        UserData = self.get_data()
+        if UserData['userDatas'] == []:
+            return None
+        UserData = UserData['userDatas'][number]
+        return UserData['defaultTimelineIndex']
+
+# ...
