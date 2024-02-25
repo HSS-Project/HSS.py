@@ -106,6 +106,7 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
+    
     def patch_timetable(self,grade:int,clas:int,date:str,index:int,name:str,place="")-> str: 
 
         """
@@ -118,6 +119,10 @@ class School:
         :param index: 変更する時数
         :param name : 教科名
         :param place: 授業場所
+
+        :return: 変更に成功した場合、変更後の時間割
+        :rtype: json
+        :raises APIからのエラー
         """    
         data ={
         "schoolId": self.schoolid,
@@ -133,6 +138,57 @@ class School:
         }}]}  
         url= "https://hss-dev.aknet.tech/v1/school"
         response = Request_HSSAPI.patch_with_token(url, self.toke,data)
-        return response
+        if errors.ErrorPrint.handle_http_error(response):
+            return response.text
+        datas = self.get_timeline(0,date)
+        return datas
+
+    def patch_homework(self,grade:int,clas:int,date:str,index:int,name:str,istoobig:bool,start:int,end:int,comment="")-> str: 
+
+        """
+        一週間の時間割変更するやつです。
+    
+        ----------
+        :param grade: 変更する学年
+        :param clas : 変更するクラス
+        :param date : 月:"mon",火:"tue","水":"wed",木:"thu",金:"fri",土:"sat",日:"sun"
+        :param index: 変更する宿題の時数
+        :param name: 変更する宿題名
+        :param istoobig : 変更する宿題が大きいか
+        :param start:変更する宿題の開始ページ数 
+        :param end: 変更する宿題の終了ページ数 
+        :param comment : 補足
+
+        :return: 変更に成功した場合、変更後の時間割
+        :rtype: json
+        :raises APIからのエラー
+        """    
+        data ={
+        "schoolId": self.schoolid,
+        "bodies" : [{"headKey" : "userDatas",
+        "key" : "timelineData",
+            "grade" : grade,
+            "class" : clas,
+            "date" : date,         
+            "index" :index,
+            "value" : {
+                "homework" : [
+                    {
+                        "name": name,
+                        "istoobig":istoobig,
+                        "page":{
+                            "start":start,
+                            "end":end,
+                            "comment":comment
+                        }
+                    }
+        ]}}]}  
+        url= "https://hss-dev.aknet.tech/v1/school"
+        response = Request_HSSAPI.patch_with_token(url, self.toke,data)
+        if errors.ErrorPrint.handle_http_error(response):
+            return response.text
+        datas = self.get_timeline(0,date)
+        return datas
+
 
     
