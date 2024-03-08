@@ -108,11 +108,6 @@ class School:
         UserData = response.json()
         return UserData['body']['data']
 
-# ...
-
-class School:
-    # ...
-
     def search_class(self, grade, classname) -> int:
         """
         指定された学年とクラス名に一致するクラスのインデックスを検索します。
