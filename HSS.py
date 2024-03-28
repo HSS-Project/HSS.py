@@ -1,4 +1,8 @@
-from . import errors, apiurl_lists, Request_HSSAPI  
+import errors, apiurl_lists, Request_HSSAPI  
+
+
+
+BASEURL = "https://hss-dev.aknet.tech/v1"
 
 class User:
     """
@@ -241,3 +245,55 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
+    
+    def patch_timeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+        """
+        Patches the timeline data for a specific user.
+        
+        Parameters:
+        - grade (int): The grade of the class to patch the timeline data for.
+        - _class (int): The class of the class to patch the timeline data for.
+        - date (str): The day of the week to patch the timeline data for.
+        - data (dict): The data to patch the timeline data for.
+        
+        Returns:
+        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        """
+        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
+        _data = {
+            "key":"timelineData",
+            "value":{
+                "name":name,
+                "place":place,
+                "isEvent":isEvent
+            },
+            "state": state
+        }
+        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
+        errors.ErrorPrint.handle_http_error(res)
+        
+    def patch_defaulttimeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+        """
+        Patches the timeline data for a specific user.
+        
+        Parameters:
+        - grade (int): The grade of the class to patch the timeline data for.
+        - _class (int): The class of the class to patch the timeline data for.
+        - date (str): The day of the week to patch the timeline data for.
+        - data (dict): The data to patch the timeline data for.
+        
+        Returns:
+        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        """
+        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
+        _data = {
+            "key":"timelineData",
+            "value":{
+                "name":name,
+                "place":place,
+                "isEvent":isEvent
+            },
+            "state": state
+        }
+        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
+        errors.ErrorPrint.handle_http_error(res)

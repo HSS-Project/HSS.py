@@ -19,7 +19,7 @@ def make_url(mode, id=None):
     戻り値:
     str:    生成されたURL
     """
-    if mode ==  0 and id != None:
+    if mode == 0 and id != None:
         id = str(id)
         return BASEURL + "/"+HSS_AP_KEY[mode]+"/"+id
     elif mode ==0 and id is None:
