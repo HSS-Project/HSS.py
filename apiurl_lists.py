@@ -21,8 +21,10 @@ def make_url(mode, id=None):
     """
     if mode ==  0 and id != None:
         id = str(id)
-        return BASEURL + "/" + HSS_AP_KEY[mode] + "/" + id
-    elif mode ==  1 and id != None:
+        return BASEURL + "/"+HSS_AP_KEY[mode]+"/"+id
+    elif mode ==0 and id is None:
+        return BASEURL + "/"+HSS_AP_KEY[mode]+"/"
+    elif mode == 1 and id != None:
         id = str(id)
         return BASEURL + "/" + HSS_AP_KEY[mode] + "/" + id
     elif mode ==  2:

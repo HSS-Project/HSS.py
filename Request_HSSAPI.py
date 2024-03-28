@@ -28,8 +28,10 @@ def patch_with_token(url, token): # Patchをたたく関数
     戻り値:
     requests.Response:  レスポンスオブジェクト
     """
+def patch_with_token(url, token, data):
     headers = {
-        'Authorization':f"Bearer {token}"
+        'Authorization':f"Bearer {token}",
+        'Content-Type': 'application/json'
     }
     response = requests.patch(url, headers=headers)
     return response
@@ -46,7 +48,8 @@ def post_with_token(url, token): # Postをたたく関数
     requests.Response:  レスポンスオブジェクト
     """
     headers = {
-        'Authorization':f"Bearer {token}"
+        'Authorization':f"Bearer {token}",
+        'Content-Type': 'application/json'
     }
     response = requests.post(url, headers=headers)
     return response
@@ -63,7 +66,8 @@ def delete_with_token(url, token): # Deleteをたたく関数
     requests.Response:  レスポンスオブジェクト
     """
     headers = {
-        'Authorization':f"Bearer {token}"
+        'Authorization':f"Bearer {token}",
+        'Content-Type': 'application/json'
     }
     response = requests.delete(url, headers=headers)
     return response

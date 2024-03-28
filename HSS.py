@@ -1,4 +1,4 @@
-from . import errors, apiurl_lists, Request_HSSAPI
+from . import errors, apiurl_lists, Request_HSSAPI  
 
 class User:
     """
@@ -18,27 +18,29 @@ class User:
         """
         self.token = token
 
-    def get_data(self, url) -> dict:
+    def get_data(self, url:str) -> dict:
         """
-        APIにリクエストを送り、レスポンスをJSON形式で返します。
+        Retrieves data from the specified URL using a token.
 
-        パラメータ:
-        url:   リクエストのURL
+        Args:
+            url (str): The URL to retrieve data from.
 
-        戻り値:
-        dict:   レスポンスのJSONデータ
+        Returns:
+            dict: The JSON response from the URL.
+
         """
-        response = Request_HSSAPI.get_with_token(url, self.token)
+        response = Request_HSSAPI.get_with_token(url, self.toke)
         if errors.ErrorPrint.handle_http_error(response):
             return None
         return response.json()
 
     def get_permission(self) -> list:
         """
-        ユーザーが参照可能な学校のリストを取得します。
+        Retrieves the permission data for the user.
 
-        戻り値:
-        list:   ユーザーが参照可能な学校のリスト
+        Returns:
+            A list of schools for which the user has permission.
+            If the user has no permission for any school, returns None.
         """
         url = apiurl_lists.make_url(2)
         UserData = self.get_data(url)
@@ -46,15 +48,17 @@ class User:
             return None
         return UserData['body']['schools']
 
-    def get_id(self, id) -> int:
+
+    def get_id(self, id:int) -> int:
         """
-        指定されたIDのユーザー情報を取得します。
+        Retrieves the data associated with the given ID.
 
-        パラメータ:
-        id:   ユーザーのID
+        Args:
+            id (int): The ID to retrieve data for.
 
-        戻り値:
-        int:   ユーザー情報
+        Returns:
+            int: The data associated with the given ID, or None if no data is found.
+
         """
         url = apiurl_lists.make_url(1, id)
         UserData = self.get_data(url)
@@ -64,12 +68,12 @@ class User:
 
     def get_me(self) -> dict:
         """
-        ログインしたユーザーの情報を取得します。
+        Retrieves the user data for the authenticated user.
 
-        戻り値:
-        dict:   ユーザー情報
+        Returns:
+            dict: A dictionary containing the user data.
         """
-        url = apiurl_lists.make_url(1, "@me")
+        url = apiurl_lists.make_url(1,"@me")
         UserData = self.get_data(url)
         return UserData['body']['data']
 class School:
@@ -96,28 +100,29 @@ class School:
 
     def get_data(self) -> dict:
         """
-        APIにリクエストを送り、学校の情報を取得します。
+        Retrieves data from the API for the specified school ID.
 
-        戻り値:
-        dict:   学校の情報
+        Returns:
+            dict: The data retrieved from the API.
         """
-        url = apiurl_lists.make_url(0, self.schoolid)
-        response = Request_HSSAPI.get_with_token(url, self.token)
+        url = apiurl_lists.make_url(0,self.schoolid)
+        response = Request_HSSAPI.get_with_token(url, self.toke)
         if errors.ErrorPrint.handle_http_error(response):
             return None
         UserData = response.json()
         return UserData['body']['data']
 
-    def search_class(self, grade, classname) -> int:
+    
+    def search_class(self, grade:int, classname:int) -> int:
         """
-        指定された学年とクラス名に一致するクラスのインデックスを検索します。
+        Searches for a class in the user data based on the given grade and classname.
 
-        パラメータ:
-        grade:   検索する学年
-        classname:   検索するクラス名
+        Args:
+            grade (int): The grade of the class to search for.
+            classname (str): The name of the class to search for.
 
-        戻り値:
-        int:   クラスのインデックス（見つからない場合はNone）
+        Returns:
+            int: The index of the class in the user data if found, None otherwise.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
@@ -128,15 +133,15 @@ class School:
         else:
             return None
 
-    def grade(self, number) -> int:
+    def grade(self, number:int) -> int:
         """
-        指定されたインデックスのクラスの学年を取得します。
+        Retrieves the grade for a specific user.
 
-        パラメータ:
-        number:   クラスのインデックス
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
 
-        戻り値:
-        int:   クラスの学年（見つからない場合はNone）
+        Returns:
+        - int: The grade of the user. Returns None if the user or grade is not found.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
@@ -145,16 +150,16 @@ class School:
         if UserData['grade'] == None:
             return None
         return UserData['grade']
-
-    def classname(self, number) -> str:
+    
+    def classname(self,number:int) -> str:
         """
-        指定されたインデックスのクラスの名前を取得します。
+        Retrieves the class name for a specific user.
 
-        パラメータ:
-        number:   クラスのインデックス
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
 
-        戻り値:
-        str:   クラスの名前（見つからない場合はNone）
+        Returns:
+        - str: The class name of the
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
@@ -163,17 +168,17 @@ class School:
         if UserData['class'] == None:
             return None
         return UserData['class']
-
-    def get_timeline(self, number, name) -> list[dict]:
+    
+    def get_timeline(self,number:int,name:str) -> list[dict]:
         """
-        指定されたインデックスのクラスの指定された曜日のタイムラインを取得します。
+        Retrieves the timeline data for a specific user.
 
-        パラメータ:
-        number:   クラスのインデックス
-        name:   曜日の名前（例: 'mon', 'tue', ...）
-
-        戻り値:
-        list[dict]:   タイムラインデータ（見つからない場合はNone）
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the timeline data for.
+        
+        Returns:
+        - list[dict]: The timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
         """
         if name not in self.DayOfWeek:
             return None
@@ -184,17 +189,17 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['timelineData'][name]
-
-    def get_default_timeline(self, number, name) -> list[dict]:
+    
+    def get_default_timeline(self,number:int,name:str) -> list[dict]:
         """
-        指定されたインデックスのクラスの指定された曜日のデフォルトタイムラインを取得します。
+        Retrieves the default timeline data for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the default timeline data for.
 
-        パラメータ:
-        number:   クラスのインデックス
-        name:   曜日の名前（例: 'mon', 'tue', ...）
-
-        戻り値:
-        list[dict]:   デフォルトタイムラインデータ（見つからない場合はNone）
+        Returns:
+        - list[dict]: The default timeline data for the specified day of the week. Returns None if the user or default timeline data is not found.
         """
         if name not in self.DayOfWeek:
             return None
@@ -203,17 +208,17 @@ class School:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineData'][name]
-
-    def get_event(self, number, name) -> list[dict]:
+    
+    def get_event(self,number:int,name:str) -> list[dict]:
         """
-        指定されたインデックスのクラスの指定された曜日のイベントを取得します。
+        Retrieves the event data for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the event data for.
 
-        パラメータ:
-        number:   クラスのインデックス
-        name:   曜日の名前（例: 'mon', 'tue', ...）
-
-        戻り値:
-        list[dict]:   イベントデータ（見つからない場合はNone）
+        Returns:
+        - list[dict]: The event data for the specified day of the week. Returns None if the user or event data is not found.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
@@ -221,20 +226,18 @@ class School:
         UserData = UserData['userDatas'][number]
         return UserData['eventData'][name]
 
-    def default_timelineindex(self, number) -> int:
+    def default_timelineindex(self,number:int) -> int:
         """
-        指定されたインデックスのクラスのデフォルトタイムラインのインデックスを取得します。
+        Retrieves the default timeline index for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
 
-        パラメータ:
-        number:   クラスのインデックス
-
-        戻り値:
-        int:   デフォルトタイムラインのインデックス（見つからない場合はNone）
+        Returns:
+        - int: The default timeline index for the specified user. Returns None if the user or default timeline index is not found.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
-
-# ...
