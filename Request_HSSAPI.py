@@ -1,15 +1,15 @@
 import requests
 
-def get_with_token(url, token): # Getをたたく関数
+def get_with_token(url, token):
     """
-    Bearerトークンを使用してGETリクエストを送信します。
+    Send a GET request using the Bearer token.
 
-    パラメータ:
-    url:   リクエストのURL
-    token:  ユーザーのトークン
-
-    戻り値:
-    requests.Response:  レスポンスオブジェクト
+    Parameters:
+        url: URL of the request
+        token: user's token
+    
+    Return value:
+        requests.Response: response object
     """
     headers = {
         'Authorization':f"Bearer {token}"
@@ -17,18 +17,17 @@ def get_with_token(url, token): # Getをたたく関数
     response = requests.get(url, headers=headers)
     return response
 
-def patch_with_token(url, token): # Patchをたたく関数
+def patch_with_token(url, token):
     """
-    Bearerトークンを使用してPATCHリクエストを送信します。
+    Send a PATCH request using the Bearer token.
 
-    パラメータ:
-    url:   リクエストのURL
-    token:  ユーザーのトークン
-
-    戻り値:
-    requests.Response:  レスポンスオブジェクト
+    Parameters:
+        url: URL of the request
+        token: user's token
+    
+    Return value:
+        requests.Response: response object
     """
-def patch_with_token(url, token, data):
     headers = {
         'Authorization':f"Bearer {token}",
         'Content-Type': 'application/json'
@@ -36,16 +35,16 @@ def patch_with_token(url, token, data):
     response = requests.patch(url, headers=headers)
     return response
 
-def post_with_token(url, token): # Postをたたく関数
+def post_with_token(url, token):
     """
-    Bearerトークンを使用してPOSTリクエストを送信します。
+    Send a POST request using the Bearer token.
 
-    パラメータ:
-    url:   リクエストのURL
-    token:  ユーザーのトークン
-
-    戻り値:
-    requests.Response:  レスポンスオブジェクト
+    Parameters:
+        url: URL of the request
+        token: user's token
+    
+    Return value:
+        requests.Response: response object
     """
     headers = {
         'Authorization':f"Bearer {token}",
@@ -54,16 +53,16 @@ def post_with_token(url, token): # Postをたたく関数
     response = requests.post(url, headers=headers)
     return response
 
-def delete_with_token(url, token): # Deleteをたたく関数
+def delete_with_token(url, token):
     """
-    Bearerトークンを使用してDELETEリクエストを送信します。
+    Send a DELETE request using the Bearer token.
 
-    パラメータ:
-    url:   リクエストのURL
-    token:  ユーザーのトークン
+    Parameters:
+        url: URL of the request
+        token: user's token
 
-    戻り値:
-    requests.Response:  レスポンスオブジェクト
+    Return value:
+        requests.Response: response object
     """
     headers = {
         'Authorization':f"Bearer {token}",

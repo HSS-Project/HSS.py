@@ -8,17 +8,18 @@ class User:
     """
     User Class
 
-    ユーザーに関する情報を取得するためのクラスです。
+     This class is used to obtain information about users.
 
-    属性:
-    token: HSS Userのトークンを入力します。
+     attribute:
+     token: Enter the HSS User token.
+    
     """
     def __init__(self, token) -> None:
         """
-        コンストラクタ
+        Constructor
 
-        パラメータ:
-        token:   ユーザーのトークン
+        Parameters:
+            token: HSS User token
         """
         self.token = token
 
@@ -84,19 +85,20 @@ class School:
     """
     School Class
 
-    学校に関する情報を取得するためのクラスです。
+    This class is used to obtain information about schools.
 
-    属性:
-    token:   トークンを入力します。
-    schoolid:   学校IDを入力します。
+    Attributes:
+        token: Enter the HSS User token.
+        schoolid: Enter the school ID.
+
     """
     def __init__(self, token, schoolid: int) -> None:
         """
-        コンストラクタ
+        Constructor
 
-        パラメータ:
-        token:   トークン
-        schoolid:   学校ID
+        Parameters:
+            token: HSS User token
+            schoolid: School ID
         """
         self.DayOfWeek = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
         self.token = token

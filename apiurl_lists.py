@@ -10,14 +10,14 @@ HSS_AP_KEY = [
 
 def make_url(mode, id=None):
     """
-    APIリクエストのURLを生成します。
+    Generate an API request URL.
 
-    パラメータ:
-    mode:   リクエストの種類を指定します。
-    id:     必要に応じて、リクエストに含めるIDを指定します。
+    Parameters:
+        mode: Specify the type of request.
+        id: Optionally specify the ID to include in the request.
 
-    戻り値:
-    str:    生成されたURL
+    Return value:
+        str: generated URL
     """
     if mode == 0 and id != None:
         id = str(id)

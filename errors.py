@@ -2,7 +2,7 @@
 
 class ErrorPrint:
     """
-    エラー処理を行うクラスです。
+    error_print: error message print function
     """
     def __init__(self):
         pass
@@ -10,13 +10,13 @@ class ErrorPrint:
     @staticmethod
     def handle_http_error(response):
         """
-        HTTPレスポンスのエラーを処理します。
+        Handles errors in HTTP responses.
 
-        パラメータ:
-        response:   レスポンスオブジェクト
+        Parameters:
+            response: response object
 
-        戻り値:
-        bool:       エラーが発生した場合はTrue、それ以外はFalse
+        Return value:
+            bool: True if an error occurs, otherwise False
         """
         if response.status_code ==  200:
             #  200 OKの処理
