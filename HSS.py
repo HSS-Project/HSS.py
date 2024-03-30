@@ -1,16 +1,52 @@
-import errors, apiurl_lists, Request_HSSAPI
+import errors, apiurl_lists, Request_HSSAPI  
+
+
+
+BASEURL = "https://hss-dev.aknet.tech/v1"
 
 class User:
-    def __init__(self,token) -> None:
-        self.toke = token
+    """
+    User Class
 
-    def get_data(self, url) -> dict:
+     This class is used to obtain information about users.
+
+     attribute:
+     token: Enter the HSS User token.
+    
+    """
+    def __init__(self, token) -> None:
+        """
+        Constructor
+
+        Parameters:
+            token: HSS User token
+        """
+        self.token = token
+
+    def get_data(self, url:str) -> dict:
+        """
+        Retrieves data from the specified URL using a token.
+
+        Args:
+            url (str): The URL to retrieve data from.
+
+        Returns:
+            dict: The JSON response from the URL.
+
+        """
         response = Request_HSSAPI.get_with_token(url, self.toke)
         if errors.ErrorPrint.handle_http_error(response):
             return None
         return response.json()
-    
+
     def get_permission(self) -> list:
+        """
+        Retrieves the permission data for the user.
+
+        Returns:
+            A list of schools for which the user has permission.
+            If the user has no permission for any school, returns None.
+        """
         url = apiurl_lists.make_url(2)
         UserData = self.get_data(url)
         if UserData['body']['schools'] == []:
@@ -18,26 +54,63 @@ class User:
         return UserData['body']['schools']
 
 
-    def get_id(self,id) -> int:
-        url = apiurl_lists.make_url(1,id)
+    def get_id(self, id:int) -> int:
+        """
+        Retrieves the data associated with the given ID.
+
+        Args:
+            id (int): The ID to retrieve data for.
+
+        Returns:
+            int: The data associated with the given ID, or None if no data is found.
+
+        """
+        url = apiurl_lists.make_url(1, id)
         UserData = self.get_data(url)
         if UserData['body']['data'] == None:
             return None
         return UserData['body']['data']
-    
 
     def get_me(self) -> dict:
+        """
+        Retrieves the user data for the authenticated user.
+
+        Returns:
+            dict: A dictionary containing the user data.
+        """
         url = apiurl_lists.make_url(1,"@me")
         UserData = self.get_data(url)
         return UserData['body']['data']
-
 class School:
-    def __init__(self,token,schoolid) -> None:
-        self.DayOfWeek = ["sun","mon","tue","wed","thu","fri","sat"]
-        self.toke = token
+    """
+    School Class
+
+    This class is used to obtain information about schools.
+
+    Attributes:
+        token: Enter the HSS User token.
+        schoolid: Enter the school ID.
+
+    """
+    def __init__(self, token, schoolid: int) -> None:
+        """
+        Constructor
+
+        Parameters:
+            token: HSS User token
+            schoolid: School ID
+        """
+        self.DayOfWeek = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+        self.token = token
         self.schoolid = schoolid
 
     def get_data(self) -> dict:
+        """
+        Retrieves data from the API for the specified school ID.
+
+        Returns:
+            dict: The data retrieved from the API.
+        """
         url = apiurl_lists.make_url(0,self.schoolid)
         response = Request_HSSAPI.get_with_token(url, self.toke)
         if errors.ErrorPrint.handle_http_error(response):
@@ -46,16 +119,36 @@ class School:
         return UserData['body']['data']
 
     
-    def search_class(self,grade,classname) -> int:
+    def search_class(self, grade:int, classname:int) -> int:
+        """
+        Searches for a class in the user data based on the given grade and classname.
+
+        Args:
+            grade (int): The grade of the class to search for.
+            classname (str): The name of the class to search for.
+
+        Returns:
+            int: The index of the class in the user data if found, None otherwise.
+        """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
         for number in range(len(UserData['userDatas'])):
             if UserData['userDatas'][number]['grade'] == grade and UserData['userDatas'][number]['class'] == classname:
-                return number    
+                return number
         else:
             return None
-    def grade(self,number) -> int:
+
+    def grade(self, number:int) -> int:
+        """
+        Retrieves the grade for a specific user.
+
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+
+        Returns:
+        - int: The grade of the user. Returns None if the user or grade is not found.
+        """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
@@ -64,7 +157,16 @@ class School:
             return None
         return UserData['grade']
     
-    def classname(self,number) -> str:
+    def classname(self,number:int) -> str:
+        """
+        Retrieves the class name for a specific user.
+
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+
+        Returns:
+        - str: The class name of the
+        """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
@@ -73,7 +175,17 @@ class School:
             return None
         return UserData['class']
     
-    def get_timeline(self,number,name) -> list[dict]:
+    def get_timeline(self,number:int,name:str) -> list[dict]:
+        """
+        Retrieves the timeline data for a specific user.
+
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the timeline data for.
+        
+        Returns:
+        - list[dict]: The timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        """
         if name not in self.DayOfWeek:
             return None
         UserData = self.get_data()
@@ -84,7 +196,17 @@ class School:
         UserData = UserData['userDatas'][number]
         return UserData['timelineData'][name]
     
-    def get_default_timeline(self,number,name) -> list[dict]:
+    def get_default_timeline(self,number:int,name:str) -> list[dict]:
+        """
+        Retrieves the default timeline data for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the default timeline data for.
+
+        Returns:
+        - list[dict]: The default timeline data for the specified day of the week. Returns None if the user or default timeline data is not found.
+        """
         if name not in self.DayOfWeek:
             return None
         UserData = self.get_data()
@@ -93,17 +215,87 @@ class School:
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineData'][name]
     
-    def get_event(self,number,name) -> list[dict]:
+    def get_event(self,number:int,name:str) -> list[dict]:
+        """
+        Retrieves the event data for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+        - name (str): The name of the day of the week to retrieve the event data for.
+
+        Returns:
+        - list[dict]: The event data for the specified day of the week. Returns None if the user or event data is not found.
+        """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['eventData'][name]
 
-    def default_timelineindex(self,number) -> int:
+    def default_timelineindex(self,number:int) -> int:
+        """
+        Retrieves the default timeline index for a specific user.
+        
+        Parameters:
+        - number (int): The index of the user in the userDatas list.
+
+        Returns:
+        - int: The default timeline index for the specified user. Returns None if the user or default timeline index is not found.
+        """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
     
+    def patch_timeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+        """
+        Patches the timeline data for a specific user.
+        
+        Parameters:
+        - grade (int): The grade of the class to patch the timeline data for.
+        - _class (int): The class of the class to patch the timeline data for.
+        - date (str): The day of the week to patch the timeline data for.
+        - data (dict): The data to patch the timeline data for.
+        
+        Returns:
+        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        """
+        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
+        _data = {
+            "key":"timelineData",
+            "value":{
+                "name":name,
+                "place":place,
+                "isEvent":isEvent
+            },
+            "state": state
+        }
+        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
+        errors.ErrorPrint.handle_http_error(res)
+        
+    def patch_defaulttimeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+        """
+        Patches the timeline data for a specific user.
+        
+        Parameters:
+        - grade (int): The grade of the class to patch the timeline data for.
+        - _class (int): The class of the class to patch the timeline data for.
+        - date (str): The day of the week to patch the timeline data for.
+        - data (dict): The data to patch the timeline data for.
+        
+        Returns:
+        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        """
+        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
+        _data = {
+            "key":"timelineData",
+            "value":{
+                "name":name,
+                "place":place,
+                "isEvent":isEvent
+            },
+            "state": state
+        }
+        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
+        errors.ErrorPrint.handle_http_error(res)
