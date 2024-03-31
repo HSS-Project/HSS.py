@@ -1,4 +1,4 @@
-import errors, apiurl_lists, Request_HSSAPI
+from . import errors, apiurl_lists, Request_HSSAPI
 import datetime
 
 
