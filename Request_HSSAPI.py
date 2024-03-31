@@ -18,13 +18,14 @@ def get_with_token(url, token):
     return response
 
 
-def patch_with_token(url, token):
+def patch_with_token(url, token, data):
     """
     Send a PATCH request using the Bearer token.
 
     Parameters:
         url: URL of the request
         token: user's token
+        data: data to be sent
     
     Return value:
         requests.Response: response object
@@ -36,13 +37,14 @@ def patch_with_token(url, token):
     response = requests.patch(url, headers=headers, json=data)
     return response
 
-def post_with_token(url, token):
+def post_with_token(url, token, data):
     """
     Send a POST request using the Bearer token.
 
     Parameters:
         url: URL of the request
         token: user's token
+        data: data to be sent
     
     Return value:
         requests.Response: response object

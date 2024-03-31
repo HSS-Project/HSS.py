@@ -53,7 +53,20 @@ class User:
             return None
         return UserData['body']['schools']
 
+    def get_permission_discordUserID(self, discordUserID:int) -> list:
+        """
+        Retrieves the permission data for the user.
+        Args:
+            discordUserID (int): _description_
 
+        Returns:
+            list: _description_
+        """
+        url = apiurl_lists.make_url(2)+f"{discordUserID}"
+        UserData = self.get_data(url)
+        return UserData['permissions']['registeredSchools']
+
+    
     def get_id(self, id:int) -> int:
         """
         Retrieves the data associated with the given ID.
@@ -119,25 +132,40 @@ class School:
         return UserData['body']['data']
 
     
-    def search_class(self, grade:int, classname:int) -> int:
+    def get_classes(self,id) -> list:
         """
-        Searches for a class in the user data based on the given grade and classname.
-
-        Args:
-            grade (int): The grade of the class to search for.
-            classname (str): The name of the class to search for.
-
+        Retrieves the class data for a specific school.
+        
+        Parameters:
+        - id (int): The ID of the school to retrieve the class data for.
+        
         Returns:
-            int: The index of the class in the user data if found, None otherwise.
+        - list: The class data for the specified school. Returns None if the class data is not found.
         """
-        UserData = self.get_data()
-        if UserData['userDatas'] == []:
-            return None
-        for number in range(len(UserData['userDatas'])):
-            if UserData['userDatas'][number]['grade'] == grade and UserData['userDatas'][number]['class'] == classname:
-                return number
-        else:
-            return None
+        url = apiurl_lists.make_url(0,id)+"/class"
+        UserData = self.get_data(url)
+        classes: list = UserData['body']['classes']#これでいいかな(( iinjanai?
+        return classes
+    
+    # def search_class_in_UserDataList(self, grade:int, classname:int) -> int:
+    #     """
+    #     Searches for a class in the user data based on the given grade and classname.
+
+    #     Args:
+    #         grade (int): The grade of the class to search for.
+    #         classname (str): The name of the class to search for.
+
+    #     Returns:
+    #         int: The index of the class in the user data if found, None otherwise.
+    #     """
+    #     UserData = self.get_data()
+    #     if UserData['userDatas'] == []:
+    #         return None
+    #     for number in range(len(UserData['userDatas'])):
+    #         if UserData['userDatas'][number]['grade'] == grade and UserData['userDatas'][number]['class'] == classname:
+    #             return number
+    #     else:
+    #         return None
 
     def grade(self, number:int) -> int:
         """
@@ -248,18 +276,20 @@ class School:
         UserData = UserData['userDatas'][number]
         return UserData['defaultTimelineIndex']
     
-    def patch_timeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+    def patch_timeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> None:
         """
-        Patches the timeline data for a specific user.
+        Patches the default timeline data for a specific user.
         
         Parameters:
         - grade (int): The grade of the class to patch the timeline data for.
         - _class (int): The class of the class to patch the timeline data for.
         - date (str): The day of the week to patch the timeline data for.
-        - data (dict): The data to patch the timeline data for.
-        
-        Returns:
-        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        - name(str): The name of the timeline data for.
+        - isEvent(bool): Event or not the timeline data for.
+        - state(str): The state of the timeline data for.
+        - place(str): The place of the timeline data for.
+
+
         """
         url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
         _data = {
@@ -274,7 +304,7 @@ class School:
         res = Request_HSSAPI.patch_with_token(url, self.token, _data)
         errors.ErrorPrint.handle_http_error(res)
         
-    def patch_defaulttimeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> dict:
+    def patch_defaulttimeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state, place:str=None) -> None:
         """
         Patches the timeline data for a specific user.
         
@@ -282,14 +312,16 @@ class School:
         - grade (int): The grade of the class to patch the timeline data for.
         - _class (int): The class of the class to patch the timeline data for.
         - date (str): The day of the week to patch the timeline data for.
-        - data (dict): The data to patch the timeline data for.
-        
-        Returns:
-        - dict: The patched timeline data for the specified day of the week. Returns None if the user or timeline data is not found.
+        - name(str): The name of the timeline data for.
+        - isEvent(bool): Event or not the timeline data for.
+        - state(str): The state of the timeline data for.
+        - place(str): The place of the timeline data for.
+
+
         """
         url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
         _data = {
-            "key":"timelineData",
+            "key":"defaulttimelineData",
             "value":{
                 "name":name,
                 "place":place,
