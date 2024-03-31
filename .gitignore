@@ -1,2 +1,5 @@
-token.json
+build/
+dist/
+HSS.py.egg-info/
+build.bat
 __pycache__/
