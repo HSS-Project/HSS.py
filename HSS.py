@@ -131,8 +131,16 @@ class NewSchool:
         classes: list = UserData['body']['classes']
         return classes
         
-    def search_class(self, grade:int, classname:int) -> int:
+    def search_class(self, grade, classname) -> int:
         """
+        Searches for the specified class.
+        
+        Args:
+            grade (int): The grade of the class to search for.
+            classname (int): The class number to search for.
+        
+        Returns:
+            int: The index of the specified class, or None if the class is not found.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
