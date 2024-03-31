@@ -34,7 +34,16 @@ def patch_with_token(url, token, data):
         'Authorization':f"Bearer {token}",
         'Content-Type': 'application/json'
     }
-    response = requests.patch(url, headers=headers, json=data)
+
+    requestData = {
+        "bodies" : [
+            data
+        ]
+    }
+
+    print( requestData )
+
+    response = requests.patch(url, headers=headers, json=requestData)
     return response
 
 def post_with_token(url, token, data):

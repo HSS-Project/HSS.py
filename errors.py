@@ -29,7 +29,7 @@ class ErrorPrint:
             raise APIResponseException("403 Forbidden error\nアクセスが拒否されました")
         elif response.status_code ==  400:
             #  400エラーの処理
-            raise APIResponseException("400 Bad Request error\n{response.json()['body']['because']}\nAPIリクエストが不正です")
+            raise APIResponseException(f"400 Bad Request error\n{response.json()['body']}\nAPIリクエストが不正です")
 
 class APIResponseException(Exception):
     pass
