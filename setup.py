@@ -12,7 +12,7 @@ setup(
     name='HSS.py', # パッケージ名(プロジェクト名)
     packages=['HSS'], # パッケージ内(プロジェクト内)のパッケージ名をリスト形式で指定
 
-    version='2.0', # バージョン
+    version='1.0', # バージョン
 
     license='MIT', # ライセンス
 
