@@ -34,7 +34,7 @@ class User:
             dict: The JSON response from the URL.
 
         """
-        response = Request_HSSAPI.get_with_token(url, self.toke)
+        response = Request_HSSAPI.get_with_token(url, self.token)
         if errors.ErrorPrint.handle_http_error(response):
             return None
         return response.json()
@@ -62,9 +62,9 @@ class User:
         Returns:
             list: _description_
         """
-        url = apiurl_lists.make_url(2)+f"{discordUserID}"
+        url = apiurl_lists.make_url(2)+f"/{discordUserID}"
         UserData = self.get_data(url)
-        return UserData['permissions']['registeredSchools']
+        return UserData['body']['permissions']['registeredSchools']
 
     
     def get_id(self, id:int) -> int:
@@ -144,7 +144,7 @@ class School:
         """
         url = apiurl_lists.make_url(0,id)+"/class"
         UserData = self.get_data(url)
-        classes: list = UserData['body']['classes']#これでいいかな(( iinjanai?
+        classes: list = UserData['body']['classes']
         return classes
     
     # def search_class_in_UserDataList(self, grade:int, classname:int) -> int:
