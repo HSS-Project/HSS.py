@@ -1,1 +1,1 @@
-from HSS import *
+from .HSS import *
