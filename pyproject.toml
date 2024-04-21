@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+[project]
+dynamic = ["version"]
+name = "HSS-Project"
+version = "1.1.1"
+description = "Easy to Use HSS API."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["HSS", "Schedule", "School"]
+dependencies = [
+  "requests",
+]
+
+[project.urls]
+Homepage = "https://hss.aknet.tech"
+Documentation = "https://readthedocs.org"
+Repository = "https://github.com/HSS-Project/HSS.py"
+"Bug Tracker" = "https://github.com/HSS-Project/HSS.py/issues"
