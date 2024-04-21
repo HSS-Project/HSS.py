@@ -190,6 +190,8 @@ def patch_timeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:
 (PATCH /v1/school/:id/userdatas/:grade/:class/:mon) TimeLineの変更  
 stateに応じて、追加、削除、更新します。  
 ***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
+| パラメータ | 形 | 説明 |
+| --- | --- | --- |
 | state | str | "add" or "remove" or "update"|  
 ***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。***       
   
