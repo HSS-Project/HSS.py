@@ -100,12 +100,12 @@ MonthData
 "MonthData" 
 = {
 
-    "sun" : []
-    "mon" : []
-    "tue" : []
-    "wed" : []
-    "thu" : []
-    "fri" : []
+    "sun" : [],
+    "mon" : [],
+    "tue" : [],
+    "wed" : [],
+    "thu" : [],
+    "fri" : [],
     "sat" : []
 }
 ```
