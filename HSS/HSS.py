@@ -223,20 +223,20 @@ class NewSchool:
         return UserData['defaultTimelineData'][name]
         
     
-    def get_homework(self,number:int,name:str) -> list[dict]:
+    def get_homework(self,number) -> list[dict]:
         """"
         Retrieves the homework data for the specified number.
         
         Args:
             number (int): The number to retrieve the homework data for.
-            name (str): The name of the homework data to retrieve.
         """
         UserData = self.get_data()
         if UserData['userDatas'] == []:
             return None
         UserData = UserData['userDatas'][number]
         return UserData['homework']
-        
+
+
     def get_event(self,number:int,name:str) -> list[dict]:
         """
         Retrieves the event data for the specified number.
@@ -263,7 +263,16 @@ class NewSchool:
     
     def patch_timeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool,state:str = "add", index:int=None, place:str=None) -> None:
         """ 
-        
+        Retrieves the timeline data.
+        Args:
+            grade (int): The number to retrieve the timeline data for.
+            _class (int): The class number of the timeline data to retrieve.
+            date (str): The date of the timeline data to retrieve.
+            name (str): The name of the timeline data to retrieve.
+            isEvent (bool): The event boolean value of the timeline data to retrieve.
+            state (str): add, update, delete
+            index (int): update, delete only
+            place (str): default None
         """
         url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
         _data = {
@@ -281,7 +290,29 @@ class NewSchool:
                 raise TypeError('Cannnot index with state "add"')
         res = Request_HSSAPI.patch_with_token(url, self.token, _data)
         errors.ErrorPrint.handle_http_error(res)
+
+    def update_timelineindex(self, grade:int, _class:int, date:str, index:int) -> None:
+        """
+        Retrieves the homework data for the specified number.
+
+        Args:
+            grade (int): The number to retrieve the homework data for.
+            _class (int): The class number of the homework data to retrieve.
+            date (str): The date of the homework data to retrieve.
+            index (int): The index of the homework data to retrieve.
         
+        Returns:
+            list: The homework data for the specified number.
+        """
+        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
+        _data = {
+            "key":"defaultTimelineIndex",
+            "value" : index,
+            "state": "update"
+        }
+        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
+        errors.ErrorPrint.handle_http_error(res)
+
     def patch_defaulttimeline(self, grade:int, _class:int, date:str, name:str, isEvent:bool = False,state:str ="add",index:int=None, place:str="なし") -> None:
         """
         Retrieves the default timeline data for the specified number.
@@ -292,9 +323,9 @@ class NewSchool:
             date (str): The date of the default timeline data to retrieve.
             name (str): The name of the default timeline data to retrieve.
             isEvent (bool): The event boolean value of the default timeline data to retrieve.
-            state (str): The state of the default timeline data to retrieve.
-            index (int): The index of the default timeline data to retrieve.
-            place (str): The place of the default timeline data to retrieve.
+            state (str): add, update, delete
+            index (int): update, delete only
+            place (str): default なし
         
         Returns:
             list: The default timeline data for the specified number.
@@ -394,27 +425,5 @@ class NewSchool:
             _data["index"] = index
             if state == "add":
                 raise TypeError('Cannnot index with state "add"')
-        res = Request_HSSAPI.patch_with_token(url, self.token, _data)
-        errors.ErrorPrint.handle_http_error(res)
-
-    def update_timelineindex(self, grade:int, _class:int, date:str, index:int) -> None:
-        """
-        Retrieves the homework data for the specified number.
-
-        Args:
-            grade (int): The number to retrieve the homework data for.
-            _class (int): The class number of the homework data to retrieve.
-            date (str): The date of the homework data to retrieve.
-            index (int): The index of the homework data to retrieve.
-        
-        Returns:
-            list: The homework data for the specified number.
-        """
-        url = BASEURL+f"/school/{self.schoolid}/userdatas/{grade}/{_class}/{date}"
-        _data = {
-            "key":"defaultTimelineIndex",
-            "value" : index,
-            "state": "update"
-        }
         res = Request_HSSAPI.patch_with_token(url, self.token, _data)
         errors.ErrorPrint.handle_http_error(res)
