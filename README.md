@@ -24,18 +24,16 @@ school = NewSchool(token=token,schoolid=schoolid)
 
 ```py 
 def get_permission() -> list:
-``` 
-(GET /v1/permission) 閲覧できる学校のIDを返却します。　-> list型
-  
+    """(PATCH /v1/school/:id/userdatas/:grade/:class/:mon)"""
+```   
 ```py
 def get_permission_discordUserID(DiscordUserID) -> list: 
+    """(GET /v1/permission/discordUserID) DiscurdUserIDからそのユーザーが閲覧できる学校listを取得します。(DIscord Bot作成に使用してください。)"""
 ```
-(GET /v1/permission/discordUserID) DiscurdUserIDからそのユーザーが閲覧できる学校listを取得します。(DIscord Bot作成に使用してください。)　->list型
-  
 ```py
 def get_id(ID) -> dict:
+    """(GET /v1/users/{HSSUserID}) user情報を取得します。"""
 ```
-(GET /v1/users/{HSSUserID}) user情報を取得します。
 **レスポンス ( Example )**
 ```py
 {
@@ -57,10 +55,9 @@ def get_id(ID) -> dict:
 |  description  |  str  | Botの説明です。  | false  |
 
 ```py
-def get_me() -> dict
+def get_me() -> dict:
+    """(GET /v1/users/@me) """
 ```
-(GET /v1/users/@me) 
-
 **レスポンス ( Example )**
 
 ```py
@@ -85,13 +82,12 @@ def get_me() -> dict
 
 ```py
 def get_classes() -> list:
+    """クラスlistを取得します"""
 ```
-クラスlistを取得します
-
 ```py
 def search_class(grade:int,classname:int) -> int: 
+    """学年-クラスからUserDatasのlistのindexを取得します。"""
 ```
-学年-クラスからUserDatasのlistのindexを取得します。  
 ***今後のnumberはこれを使用してください。***  
 ***class,classnameは必ずint型で渡してください。今後strでもいけるよう修正されると思われます。***   
 
@@ -112,18 +108,16 @@ MonthData
 
 ```py
 def grade(number:int) -> int:
+    """学年を取得します。"""
 ```
-学年を取得します。
-
 ```py
 def classname(number:int) -> int:
+    """クラスを取得します。"""
 ```
-クラスを取得します。
 
 ```py
 def get_timeline(number:int,MonthData:str) -> list[dict]:
 ```
-
 **レスポンス ( Example )**
 ```py
 {
@@ -141,13 +135,12 @@ def get_timeline(number:int,MonthData:str) -> list[dict]:
 
 ```py
 def get_default_timeline(number:int,MonthData:str) -> list[dict]:
+    """基本時間割を取得します(timelineと同じ)"""
 ```
-基本時間割を取得します(timelineと同じ)
-
 ```py
-def get_homework(number:int) -> list[dict]
+def get_homework(number:int) -> list[dict]:
+    """宿題を取得します。  """
 ```
-宿題を取得します。  
 **レスポンス ( Example )**  
 ```py
 {
@@ -171,8 +164,8 @@ def get_homework(number:int) -> list[dict]
 
 ```py
 def get_event(number:int,MonthData:str) -> list[dict]:
+    """イベント情報を取得します。  """
 ``` 
-イベント情報を取得します。  
 **レスポンス ( Example )**  
 ```py
 {
@@ -189,10 +182,8 @@ def get_event(number:int,MonthData:str) -> list[dict]:
 
 ```py
 def default_timelineindex(number:int) -> int:
+    """基本的な時間割数"""
 ```
-基本的な時間割数 
-
-
 ```py
 def patch_timeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:str = "add", index:int=None, place:str=None): 
 ```
@@ -200,27 +191,27 @@ def patch_timeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:
 stateに応じて、追加、削除、更新します。  
 ***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
 | state | str | "add" or "remove" or "update"|  
-***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。 ***  
-
+***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。 ***     
+  
 ```py
 def update_timelineindex(grade:int,classname:int,date:str,index:int):
 ```
 ***非推奨***
-
+  
 ```py
 def patch_defaulttimeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:str = "add", index:int=None, place:str="なし"):  
+    """標準時間割の変更。 patch_timelineと同じ """
 ```
-標準時間割の変更。 patch_timelineと同じ  
 
 ```py
 def patch_event(grade:int, _class:int, date:str, name:str, isEndofDay:bool, start:datetime, end:datetime, place:str=None , state :str = "add" , index : int = None):
 ```
 EventDataの変更  
 stateに応じて、追加、削除、更新します。  
-***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
-
+***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***    
+  
 ```py
 def patch_homework(grade:int, _class:int, date:str, name:str, start, end, istooBig:bool = False, comment:str=None, state :str = "add" , index : int = None): 
+    """Homeworkの変更"""
 ```
-Homeworkの変更  
  
