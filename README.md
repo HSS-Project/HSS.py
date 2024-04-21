@@ -5,12 +5,12 @@
 HSSAPIをPythonで簡単にしようできるようにしたAPIラッパー
 
 # 使用方法
-***[HSS API ドキュメント](https://hss-dev-docs.aknet.tech/)***
-***APIラッパーは一部の機能をサポートしています。API機能を全て活用したい場合、Request_HHSAPI.pyやHSS.pyのget_data関数を使用することにより処理ができると思われます。***
+***[HSS API ドキュメント](https://hss-dev-docs.aknet.tech/)***  
+***APIラッパーは一部の機能をサポートしています。  API機能を全て活用したい場合、Request_HHSAPI.pyやHSS.pyのget_data関数を使用することにより処理ができると思われます。***
 
 ## 初期設定
-***HSS APIでtokenを発行してください。***
-**tokenをUser NewSchoolに渡してください。またNewSchoolには学校idを渡してください。**
+***HSS APIでtokenを発行してください。***  
+**tokenをUser NewSchoolに渡してください。またNewSchoolには学校idを渡してください。**  
 ```py
 from HSS import NewSchool
 from HSS import User
@@ -91,9 +91,9 @@ def get_classes() -> list:
 ```py
 def search_class(grade:int,classname:int) -> int: 
 ```
-学年-クラスからUserDatasのlistのindexを取得します。
-***今後のnumberはこれを使用してください。***
-***class,classnameは必ずint型で渡してください。今後strでもいけるよう修正されると思われます。*** 
+学年-クラスからUserDatasのlistのindexを取得します。  
+***今後のnumberはこれを使用してください。***  
+***class,classnameは必ずint型で渡してください。今後strでもいけるよう修正されると思われます。***   
 
 MonthData
 ```py
@@ -147,8 +147,8 @@ def get_default_timeline(number:int,MonthData:str) -> list[dict]:
 ```py
 def get_homework(number:int) -> list[dict]
 ```
-宿題を取得します。
-**レスポンス ( Example )**
+宿題を取得します。  
+**レスポンス ( Example )**  
 ```py
 {
     "name" : str,
@@ -172,8 +172,8 @@ def get_homework(number:int) -> list[dict]
 ```py
 def get_event(number:int,MonthData:str) -> list[dict]:
 ``` 
-イベント情報を取得します。
-**レスポンス ( Example )**
+イベント情報を取得します。  
+**レスポンス ( Example )**  
 ```py
 {
     "name": str,
@@ -196,11 +196,11 @@ def default_timelineindex(number:int) -> int:
 ```py
 def patch_timeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:str = "add", index:int=None, place:str=None): 
 ```
-(PATCH /v1/school/:id/userdatas/:grade/:class/:mon) TimeLineの変更
+(PATCH /v1/school/:id/userdatas/:grade/:class/:mon) TimeLineの変更  
 stateに応じて、追加、削除、更新します。  
-***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***
-| state | str | "add" or "remove" or "update"|
-***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。 ***
+***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
+| state | str | "add" or "remove" or "update"|  
+***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。 ***  
 
 ```py
 def update_timelineindex(grade:int,classname:int,date:str,index:int):
@@ -210,17 +210,17 @@ def update_timelineindex(grade:int,classname:int,date:str,index:int):
 ```py
 def patch_defaulttimeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:str = "add", index:int=None, place:str="なし"):  
 ```
-標準時間割の変更。 patch_timelineと同じ
+標準時間割の変更。 patch_timelineと同じ  
 
 ```py
 def patch_event(grade:int, _class:int, date:str, name:str, isEndofDay:bool, start:datetime, end:datetime, place:str=None , state :str = "add" , index : int = None):
 ```
-EventDataの変更
+EventDataの変更  
 stateに応じて、追加、削除、更新します。  
-***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***
+***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
 
 ```py
 def patch_homework(grade:int, _class:int, date:str, name:str, start, end, istooBig:bool = False, comment:str=None, state :str = "add" , index : int = None): 
 ```
-Homeworkの変更
+Homeworkの変更  
  
