@@ -191,7 +191,7 @@ def patch_timeline(grade:int,classname:int,date:str,name:str,isEvent:bool,state:
 stateに応じて、追加、削除、更新します。  
 ***updateやremoveの場合は、indexを指定してください。そのindexで上書きをします。***  
 | state | str | "add" or "remove" or "update"|  
-***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。 ***     
+***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。***       
   
 ```py
 def update_timelineindex(grade:int,classname:int,date:str,index:int):
