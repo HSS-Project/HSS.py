@@ -74,10 +74,10 @@ def get_me() -> dict:
 
 ```py
 {
-    "developer" : bool
-    "hid" : int
-    "discordAccount" : bool
-    "username" : str
+    "developer" : bool.
+    "hid" : int,
+    "discordAccount" : bool,
+    "username" : str,
     "email" : str
 }
 ```
@@ -183,7 +183,7 @@ def get_event(number:int,MonthData:str) -> list[dict]:
 {
     "name": str,
     "timeData" : TimeData,
-    "place": str or None,
+    "place": str or None
 }
 ```
 | プロパティ名 | 型 | 説明 |
