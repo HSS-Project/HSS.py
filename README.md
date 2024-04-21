@@ -91,7 +91,7 @@ def search_class(grade:int,classname:int) -> int:
 ***今後のnumberはこれを使用してください。***  
 ***class,classnameは必ずint型で渡してください。今後strでもいけるよう修正されると思われます。***   
 
-MonthData
+### MonthData
 ```py
 "MonthData" 
 = {
