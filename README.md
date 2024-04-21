@@ -193,6 +193,7 @@ stateに応じて、追加、削除、更新します。
 | パラメータ | 形 | 説明 |
 | --- | --- | --- |
 | state | str | "add" or "remove" or "update"|  
+  
 ***addはdefaultTimeLineIndexより多い場合には追加されません。エラーがスローされます。***       
   
 ```py
