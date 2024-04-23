@@ -36,7 +36,7 @@ school = NewSchool(token=token,schoolid=schoolid)
 
 ```py 
 def get_permission() -> list:
-    """(PATCH /v1/school/:id/userdatas/:grade/:class/:mon)"""
+    """（GET /v1/permission）"""
 ```   
 ```py
 def get_permission_discordUserID(DiscordUserID) -> list: 
