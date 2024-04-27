@@ -1,5 +1,5 @@
 # HSSAPI-Python  
-<img src="https://img.shields.io/badge/-Pypi-000.svg?logo=pypi&style=plastic"><img src="https://img.shields.io/badge/-Python-ffd700.svg?logo=python&style=plastic">
+[![PyPI](https://img.shields.io/badge/-Pypi-000.svg?logo=pypi&style=plastic)](https://pypi.org/project/HSS.py/) <img src="https://img.shields.io/badge/-Python-ffd700.svg?logo=python&style=plastic">
   
 ## 目的
 HSSAPIをPythonで簡単にしようできるようにしたAPIラッパー
