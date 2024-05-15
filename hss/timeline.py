@@ -25,6 +25,9 @@ class Lesson:
         self.name = name
         self.place = place
         self.is_event = is_event
+    
+    def __repr__(self) -> str:
+        return f"<Lesson name='{self.name}' place='{self.place}' is_event={self.is_event}>"
 
 
 class DayTimeline:
@@ -39,8 +42,16 @@ class DayTimeline:
     ):
         lessons = []
         for cl in data:
+            if cl is None:
+                continue
             lessons.append(Lesson(cl["name"], cl["place"], cl["IsEvent"]))
         return cls(client, day, lessons)
+
+    def __len__(self):
+        return len(self.lessons)
+
+    def __repr__(self) -> str:
+        return f"<DayTimeline len={self.__len__()}>"
 
 
 class Timeline:
@@ -68,3 +79,9 @@ class Timeline:
         if len(args) != 7:
             raise ValueError(f"API returned data with only {len(args)} days.")
         return cls(client, *args)
+
+    def __repr__(self) -> str:
+        t = []
+        for day in DayTypeDict.keys():
+            t.append(f"{day}={getattr(self, day)}")
+        return f"<Timeline {' '.join(t)}>"

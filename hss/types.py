@@ -6,7 +6,7 @@ class SchoolType(Enum):
     Kosen = 0
     NormalSchool = 1
     InternetSchool = 2
-    BetaSchool = 3  # This type used only at beta version.
+    BetaSchool = 3  # ベータ版でのみ作成できる学校の種別
 
 
 class RawTimelineClassData(TypedDict):
@@ -25,8 +25,16 @@ class RawTimelineData(TypedDict):
     sat: list[RawTimelineClassData]
 
 
+class RawTimeData(TypedDict):
+    start: int | None  # 1970年1月1日からの経過ミリ秒
+    end: int | None  # 上同
+    is_end_of_day: bool
+
+
 class RawEventData(RawTimelineData):
-    pass  # 現時点で、このデータにはTimelineDataとの差異はない
+    name: str
+    place: str
+    timeData: RawTimeData
 
 
 RawClassData = TypedDict(
@@ -38,7 +46,7 @@ RawClassData = TypedDict(
         "eventData": RawEventData,
         "defaultTimelineData": RawTimelineData
     }
-)
+)  # キー`class`(予約語で使用不可)が存在するためここだけ別形式
 
 
 class TimelineDayType(Enum):
@@ -81,3 +89,20 @@ class RawUserData(TypedDict):
     developer: bool
     discordAccount: bool
     isBot: bool
+
+
+class RawSchoolsFromDiscordData(TypedDict):
+    discordUserId: str
+    registeredSchools: list[str]
+
+
+class RawHomeworkPageData(TypedDict):
+    start: str | int
+    end: str | int
+    comment: str | None
+
+
+class RawHomeworkData(TypedDict):
+    name: str
+    istooBig: bool
+    page: RawHomeworkPageData

@@ -18,6 +18,27 @@ class Client:
     async def setup(
         self, token: str, *, session: Optional[aiohttp.ClientSession] = None
     ) -> None:
+        """Setup the client.
+
+        Setup the client. All schools your client can see will be cached on the
+        memory, but all users your client can see will NOT be cached because of
+        API scheme. You can check if the client is ready by using `is_ready`. 
+
+        Args:
+            token: The HSS-API Token of your application.
+            session: The `aiohttp.ClientSession` object which you can
+                customize. In default, the new session with 10-second timeout
+                will be used.
+
+        Raises:
+            Forbidden: The token is not valid.
+            ValueError: The session was already closed.
+
+        Note:
+            This function calls the HSS-API as many times as the number of
+            schools which the application can see. It is not recommended to
+            call this function frequently.
+        """
         self._http = HTTPClient(token, session=session)
         self._schools: dict[int, School] = {}
         self._users: dict[int, User] = {}

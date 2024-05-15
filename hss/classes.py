@@ -38,3 +38,6 @@ class Class:
         if isinstance(other, Class):
             return other.grade == self.grade and other.class_ == self.class_
         return NotImplemented
+
+    def __repr__(self) -> str:
+        return f"<Class school_id={self.school_id} grade={self.grade} class_={self.class_}>"

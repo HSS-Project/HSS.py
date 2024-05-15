@@ -22,11 +22,33 @@ class User:
         self.description = description
 
     async def fetch(self):
-        data = await self.client._http.get_user(self.id)
+        try:
+            data = await self.client._http.get_user(self.id)
+        except NotFound:
+            self.client._user_id_cache.discard(self.id)
+            del self.client._users[self.id]
+            return
         self.name = data["username"]
         self.is_discord = data["discordAccount"]
         self.is_bot = data["isBot"]
         self.developer = data["developer"]
+        self.is_partial = True
+
+    @property
+    def cached(self):
+        "The alias of `is_pertial`, but its the opposite."
+        return not self.is_partial
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, User):
+            return other.id == self.id
+        return NotImplemented
+
+    def __repr__(self) -> str:
+        if self.is_partial:
+            return f"<User id={self.id} cached=False>"
+        else:
+            return f"<User id={self.id} cached=True name='{self.name}' is_bot={self.is_bot}>"
 
 
 class ClientUser(User):
@@ -35,18 +57,9 @@ class ClientUser(User):
         self.owner_id: int = owner_id
 
     async def fetch(self):
-        try:
-            data = await self.client._http.get_client_user()
-        except NotFound:
-            self.client._user_id_cache.discard(self.id)
-            del self.client._users[self.id]
-            return
+        data = await self.client._http.get_client_user()
         self.name = data["username"]
         self.developer = data["developer"]
         self.is_bot = data["isBot"]
         self.owner_id = int(data["ownerId"])
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, User):
-            return other.id == self.id
-        return NotImplemented
+        self.is_partial = True

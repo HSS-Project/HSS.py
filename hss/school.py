@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 from .types import SchoolType, RawSchoolData, RawClassData
 from .user import User
 from .classes import Class
-from .errors import NotFound
 
 if TYPE_CHECKING:
     from .client import Client
@@ -37,17 +36,17 @@ class School:
 
         self.name: str = name
         self.type: SchoolType = type
-        self._classes: dict[int, dict[int, Class]] = {}
+        self.classes: dict[int, dict[int, Class]] = {}
         self.setup_classes(classes_data)
 
     def setup_classes(self, classes: list[RawClassData]) -> None:
         for class_data in classes:
             grade = int(class_data["grade"])
-            if grade not in self._classes:
-                self._classes[grade] = {}
+            if grade not in self.classes:
+                self.classes[grade] = {}
             class_number = int(class_data["class"])
             class_obj = Class.from_raw_data(self.client, self.id, class_data)
-            self._classes[grade][class_number] = class_obj
+            self.classes[grade][class_number] = class_obj
 
     async def update_data(self) -> None:
         raw_data = await self.client._http.get_school(self.id)
@@ -72,7 +71,7 @@ class School:
 
         self.name = details["name"]
         self.type = details["type"]
-        self._classes: dict[int, dict[int, Class]] = {}
+        self.classes: dict[int, dict[int, Class]] = {}
         self.setup_classes(raw_data["userDatas"])
 
     @classmethod
@@ -84,10 +83,13 @@ class School:
         )
 
     @property
-    def classes(self):
-        return self._classes.values()
+    def class_count(self):
+        return sum(len(self.classes[i]) for i in self.classes.keys())
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, School):
             return other.id == self.id
         return NotImplemented
+
+    def __repr__(self) -> str:
+        return f"<School id={self.id} name='{self.name}' class_count={self.class_count}>"
