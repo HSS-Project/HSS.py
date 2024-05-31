@@ -79,3 +79,12 @@ class Client:
 
     def get_user(self, id: int) -> Optional[User]:
         return self._users.get(id, None)
+
+    async def fetch_schools_from_discord(self, discord_id: int) -> list[School]:
+        data = await self._http.get_schools_from_discord_user(discord_id)
+        ret = []
+        for school_id in data["registeredSchools"]:
+            school = self.get_school(int(school_id))
+            if school is not None:
+                ret.append(school)
+        return ret

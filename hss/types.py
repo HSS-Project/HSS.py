@@ -9,32 +9,43 @@ class SchoolType(Enum):
     BetaSchool = 3  # ベータ版でのみ作成できる学校の種別
 
 
-class RawTimelineClassData(TypedDict):
+class RawLessonData(TypedDict):
+    # タイムライン上の各データには名前がついていないため、仮に「Lesson」と命名
     name: str
     place: str
     IsEvent: bool
 
 
 class RawTimelineData(TypedDict):
-    sun: list[RawTimelineClassData]
-    mon: list[RawTimelineClassData]
-    tue: list[RawTimelineClassData]
-    wed: list[RawTimelineClassData]
-    thu: list[RawTimelineClassData]
-    fri: list[RawTimelineClassData]
-    sat: list[RawTimelineClassData]
+    sun: list[RawLessonData]
+    mon: list[RawLessonData]
+    tue: list[RawLessonData]
+    wed: list[RawLessonData]
+    thu: list[RawLessonData]
+    fri: list[RawLessonData]
+    sat: list[RawLessonData]
 
 
 class RawTimeData(TypedDict):
     start: int | None  # 1970年1月1日からの経過ミリ秒
     end: int | None  # 上同
-    is_end_of_day: bool
+    isEndofDay: bool
 
 
-class RawEventData(RawTimelineData):
+class RawEventData(RawLessonData):
     name: str
     place: str
     timeData: RawTimeData
+
+
+class RawEventTimelineData(TypedDict):
+    sun: list[RawEventData]
+    mon: list[RawEventData]
+    tue: list[RawEventData]
+    wed: list[RawEventData]
+    thu: list[RawEventData]
+    fri: list[RawEventData]
+    sat: list[RawEventData]
 
 
 RawClassData = TypedDict(
@@ -43,7 +54,7 @@ RawClassData = TypedDict(
         "defaultTimelineIndex": int,
         "grade": int, "class": int, "homework": list,
         "timelineData": RawTimelineData,
-        "eventData": RawEventData,
+        "eventData": RawEventTimelineData,
         "defaultTimelineData": RawTimelineData
     }
 )  # キー`class`(予約語で使用不可)が存在するためここだけ別形式
@@ -106,3 +117,24 @@ class RawHomeworkData(TypedDict):
     name: str
     istooBig: bool
     page: RawHomeworkPageData
+
+
+DayTypeDict: dict[str, TimelineDayType] = {
+    "sun": TimelineDayType.sun,
+    "mon": TimelineDayType.mon,
+    "tue": TimelineDayType.tue,
+    "wed": TimelineDayType.wed,
+    "thu": TimelineDayType.thu,
+    "fri": TimelineDayType.fri,
+    "sat": TimelineDayType.sat,
+}
+
+DayTypeRevDict: dict[TimelineDayType, str] = {
+    TimelineDayType.sun: "sun",
+    TimelineDayType.mon: "mon",
+    TimelineDayType.tue: "tue",
+    TimelineDayType.wed: "wed",
+    TimelineDayType.thu: "thu",
+    TimelineDayType.fri: "fri",
+    TimelineDayType.sat: "sat",
+}

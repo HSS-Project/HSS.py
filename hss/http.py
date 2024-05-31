@@ -1,12 +1,16 @@
-from typing import Optional, Literal
+from typing import Optional, Literal, TYPE_CHECKING
 import aiohttp
 
 from .types import (
-    RawSchoolData, RawClassData, RawClientUserData, RawTimeData,
+    RawSchoolData, RawClassData, RawClientUserData,
     RawUserData, RawSchoolsFromDiscordData, TimelineDayType,
-    RawHomeworkData
+    RawHomeworkData, DayTypeRevDict
 )
 from .errors import NotFound, Forbidden, BadRequest, HTTPException
+
+if TYPE_CHECKING:
+    from .timeline import EventTime
+    from datetime import datetime
 
 
 __all__ = ["HTTPClient", "BASE_URL"]
@@ -26,7 +30,7 @@ class HTTPClient:
         self._token = token
         self._headers = {
             'Authorization': f"Bearer {token}",
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         }
 
     async def return_with_error_handler(self, response: aiohttp.ClientResponse):
@@ -66,8 +70,7 @@ class HTTPClient:
     async def patch_request(self, endpoint: str, data):
         url = BASE_URL + endpoint
         reqjson = {"bodies": [data]}
-        headers = self._headers
-        async with self.session.patch(url, headers=headers, json=reqjson) as response:
+        async with self.session.patch(url, headers=self._headers, json=reqjson) as response:
             return await self.return_with_error_handler(response)
 
     # GET methods
@@ -97,7 +100,7 @@ class HTTPClient:
         data = await self.get_request(f"users/{user_id}")
         return data["body"]["data"]
 
-    async def get_servers_from_discord_user(self, discord_user_id: int) -> RawSchoolsFromDiscordData:
+    async def get_schools_from_discord_user(self, discord_user_id: int) -> RawSchoolsFromDiscordData:
         data = await self.get_request(f"permission/{discord_user_id}")
         return data["body"]["permissions"]
 
@@ -107,7 +110,8 @@ class HTTPClient:
         self, epdata: dict, reqdata: dict
     ) -> dict:
         # エンドポイントが同じpatchリクエストの処理をまとめる
-        endpoint = f"school/{epdata['school']}/userdatas/{epdata['grade']}/{epdata['class']}/{epdata['day']}"
+        day = DayTypeRevDict[epdata["day"]]
+        endpoint = f"school/{epdata['school']}/userdatas/{epdata['grade']}/{epdata['class']}/{day}"
         return await self.patch_request(endpoint, reqdata)
 
     async def patch_timeline(
@@ -128,7 +132,7 @@ class HTTPClient:
 
         return await self._change_userdata(epdata, reqdata)
 
-    async def patch_defalt_timeline(
+    async def patch_default_timeline(
         self, school_id: int, grade_id: int, class_id: int, day: TimelineDayType,
         state: Literal["add", "remove", "update"], name: str, place: str,
         is_event: bool, index: Optional[int] = None
@@ -149,18 +153,25 @@ class HTTPClient:
     async def patch_event(
         self, school_id: int, grade_id: int, class_id: int, day: TimelineDayType,
         state: Literal["add", "remove", "update"], name: str, place: str,
-        time: RawTimeData | dict, index: Optional[int] = None
+        time: Optional["EventTime"], index: Optional[int] = None
     ) -> dict:
+        def _get_datetime(time: Optional["datetime"]) -> Optional[int]:
+            if time is None:
+                return None
+            return int(time.timestamp())
+
         if state == "add":
+            if time is None:
+                raise ValueError("Time parameter must be passed on 'add' mode.")
             timedata = {
-                "start": time["start"], "end": time["end"],
-                "isEndofDay": time["is_end_of_day"]
+                "start": _get_datetime(time.start), "end": _get_datetime(time.end),
+                "isEndofDay": time.is_end_of_day
             }
         else:
             timedata = {}
         epdata = {"school": school_id, "grade": grade_id, "class": class_id, "day": day}
         reqdata = {
-            "key":"defaultTimelineData", "state": state,
+            "key":"eventData", "state": state,
             "value":{"name": name, "place": place, "timeData": timedata}
         }
 
@@ -190,7 +201,7 @@ class HTTPClient:
 
         return await self._change_userdata(epdata, reqdata)
 
-    async def patch_defalt_timeline_index(
+    async def patch_default_timeline_index(
         self, school_id: int, grade_id: int, class_id: int,
         new_index: int
     ) -> dict:

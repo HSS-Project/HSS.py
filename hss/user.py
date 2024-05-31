@@ -1,4 +1,5 @@
 from typing import Optional, TYPE_CHECKING
+import logging
 
 from .errors import NotFound
 
@@ -22,9 +23,13 @@ class User:
         self.description = description
 
     async def fetch(self):
+        _logger = logging.getLogger(__name__)
+        if not self.is_partial:
+            _logger.debug("This user is already cached.")
         try:
             data = await self.client._http.get_user(self.id)
         except NotFound:
+            _logger.info("User not found, delete myself.")
             self.client._user_id_cache.discard(self.id)
             del self.client._users[self.id]
             return
@@ -36,7 +41,7 @@ class User:
 
     @property
     def cached(self):
-        "The alias of `is_pertial`, but its the opposite."
+        "The alias of `is_partial`, but its the opposite."
         return not self.is_partial
 
     def __eq__(self, other: object) -> bool:
