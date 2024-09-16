@@ -6,7 +6,7 @@ from .types import (
     RawUserData, RawSchoolsFromDiscordData, TimelineDayType,
     RawHomeworkData, DayTypeRevDict
 )
-from .errors import NotFound, Forbidden, BadRequest, HTTPException
+from .errors import HTTPException, handle_http_error
 
 if TYPE_CHECKING:
     from .timeline import EventTime
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 __all__ = ["HTTPClient", "BASE_URL"]
 
 
-BASE_URL = "https://hss-dev.aknet.tech/v1/"
+BASE_URL = "https://hss-b-ds.akikaki.net/"
 
 
 class HTTPClient:
@@ -38,29 +38,15 @@ class HTTPClient:
             json = await response.json()
         except:
             json = {}
-        if response.ok:
-            if json.get("status", 0) < 0:
-                msg: str = json.get("body", {}).get("message", "")
-                # APIの仕様に対応するためBad Requestの表記揺れを検出
-                if "badrequest" in msg.replace(" ", "").lower():
-                    if "errors" in json.get("body", {}):
-                        raise BadRequest(json["body"]["errors"])
-                    else:
-                        raise BadRequest(json.get("body", {}).get("because", ""))
-                else:
-                    raise HTTPException("Unknown API Error has occurred:", json)
+        if response.ok and "status" in json:
+            if json["status"] != "success":
+                raise HTTPException("Unknown API Error has occurred:", json)
             return json
         else:
-            if response.status == 404:
-                raise NotFound(json)
-            elif response.status == 403:
-                raise Forbidden(json)
-            elif response.status == 400:
-                raise BadRequest(json)
-            else:
-                raise HTTPException(
-                    "Unknown API Error has occurred:", response.status, json
-                )
+            if json.get("status", "") != "error" or "message" not in json:
+                raise HTTPException("Unknown API Error has occurred:", json)
+            # エラーの振り分け
+            handle_http_error(response.status, json["message"])
 
     async def get_request(self, endpoint: str):
         url = BASE_URL + endpoint
