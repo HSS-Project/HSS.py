@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TypedDict, Literal
+from typing import TypedDict, Literal, NotRequired
 
 
 class SchoolType(Enum):
@@ -89,17 +89,20 @@ class RawClientUserData(TypedDict):
     hid: str
     username: str
     developer: Literal[False]
-    isBot: Literal[True]
-    description: str
+    isBot: Literal[True]  # このキーはdocsには明記されていない
+    description: str  # このキーはdocsには明記されていない
     ownerId: str  # このキーはdocsには明記されていない
+    # email: str  # このキーはdocsにあるが実際にはない
+    # discordAccount: NotRequired[bool]  # このキーはdocsにあるが実際にはない
 
 
 class RawUserData(TypedDict):
     hid: str
     username: str
     developer: bool
-    discordAccount: bool
-    isBot: bool
+    discordAccount: NotRequired[bool]
+    isBot: bool  # docs上ではNotRequired[bool]だが、必ずある
+    description: NotRequired[bool]
 
 
 class RawSchoolsFromDiscordData(TypedDict):

@@ -17,6 +17,9 @@ def handle_http_error(status: int, reason: str):
 class HSSException(Exception):
     pass
 
+class NotSupported(HSSException):
+    pass
+
 class HTTPException(HSSException):
     pass
 

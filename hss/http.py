@@ -6,7 +6,7 @@ from .types import (
     RawUserData, RawSchoolsFromDiscordData, TimelineDayType,
     RawHomeworkData, DayTypeRevDict
 )
-from .errors import HTTPException, handle_http_error
+from .errors import HTTPException, handle_http_error, NotSupported
 
 if TYPE_CHECKING:
     from .timeline import EventTime
@@ -47,6 +47,7 @@ class HTTPClient:
                 raise HTTPException("Unknown API Error has occurred:", json)
             # エラーの振り分け
             handle_http_error(response.status, json["message"])
+            raise NotImplemented  # NoReturnを型チェッカーがNoneと勘違いするので仮置き
 
     async def get_request(self, endpoint: str):
         url = BASE_URL + endpoint
@@ -62,33 +63,37 @@ class HTTPClient:
     # GET methods
 
     async def get_all_schools(self) -> list[str]:
-        data = await self.get_request("permission")
-        return data["body"]["schools"]
+        data = await self.get_request("users/@me/permission")
+        return data["data"]
 
     async def get_school(self, school_id: int) -> RawSchoolData:
-        data = await self.get_request(f"school/{school_id}")
-        return data["body"]["data"]
+        # docs上では school/:id だが、実際のエンドポイントは schools/:id 以下も同様
+        data = await self.get_request(f"schools/{school_id}")
+        return data["data"]
 
     async def get_school_classes(self, school_id: int) -> dict[str, list[int]]:
-        # このエンドポイントはdocsには明記されていない
-        data = await self.get_request(f"school/{school_id}/class")
-        return data["body"]['classes']
+        # docsにはあるものの、学年情報取得と競合してAPI側が正しく処理しない
+        raise NotSupported()
+
+    async def get_grade_data(self, school_id: int, grade_id: int) -> list[RawClassData]:
+        data = await self.get_request(f"schools/{school_id}/{grade_id}")
+        return data["data"]
 
     async def get_class_data(self, school_id: int, grade_id: int, class_id: int) -> RawClassData:
-        data = await self.get_request(f"school/{school_id}/userdatas/{grade_id}/{class_id}")
-        return data["body"]
+        data = await self.get_request(f"schools/{school_id}/{grade_id}/{class_id}")
+        return data["data"]
 
     async def get_client_user(self) -> RawClientUserData:
         data = await self.get_request("users/@me")
-        return data["body"]["data"]
+        return data["data"]
 
     async def get_user(self, user_id: int) -> RawUserData:
         data = await self.get_request(f"users/{user_id}")
-        return data["body"]["data"]
+        return data["data"]
 
-    async def get_schools_from_discord_user(self, discord_user_id: int) -> RawSchoolsFromDiscordData:
-        data = await self.get_request(f"permission/{discord_user_id}")
-        return data["body"]["permissions"]
+    async def get_schools_from_discord_user(self, discord_user_id: int):
+        # 現行バージョンでは廃止された。HSS.pyではv1.0で削除予定
+        raise NotSupported()
 
     # PATCH methods
 
