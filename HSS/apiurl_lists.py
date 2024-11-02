@@ -1,6 +1,6 @@
 # APIのURLを定義するモジュール
 
-BASEURL = "https://hss-ds.akikaki.net/"
+BASEURL = "https://hss-ds.akikaki.net/v1/"
 HSS_AP_KEY = [
     "school",
     "users",

@@ -3,7 +3,7 @@ import datetime
 
 
 
-BASEURL = "https://hss-dev.aknet.tech/v1"
+BASEURL = "https://hss-ds.akikaki.net/v1/"
 
 class User:
     """
