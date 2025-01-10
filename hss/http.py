@@ -3,7 +3,7 @@ import aiohttp
 
 from .types import (
     RawSchoolData, RawClassData, RawClientUserData,
-    RawUserData, RawSchoolsFromDiscordData, TimelineDayType,
+    RawUserData, TimelineDayType,
     RawHomeworkData, DayTypeRevDict
 )
 from .errors import HTTPException, handle_http_error, NotSupported
@@ -17,6 +17,7 @@ __all__ = ["HTTPClient", "BASE_URL"]
 
 
 BASE_URL = "https://hss-b-ds.akikaki.net/"
+OLD_BASE_URL = "https://hss-ds.akikaki.net/v1/"
 
 
 class HTTPClient:
@@ -55,7 +56,8 @@ class HTTPClient:
             return await self.return_with_error_handler(response)
 
     async def patch_request(self, endpoint: str, data):
-        url = BASE_URL + endpoint
+        # patchリクエストはNextバージョンには実装されていないので、旧バージョンのAPIを利用する。
+        url = OLD_BASE_URL + endpoint
         reqjson = {"bodies": [data]}
         async with self.session.patch(url, headers=self._headers, json=reqjson) as response:
             return await self.return_with_error_handler(response)
@@ -67,13 +69,13 @@ class HTTPClient:
         return data["data"]
 
     async def get_school(self, school_id: int) -> RawSchoolData:
-        # docs上では school/:id だが、実際のエンドポイントは schools/:id 以下も同様
+        # docs上では school/:id だが、実際のエンドポイントは schools/:id (以下のschool/...系も同様)
         data = await self.get_request(f"schools/{school_id}")
         return data["data"]
 
     async def get_school_classes(self, school_id: int) -> dict[str, list[int]]:
         # docsにはあるものの、学年情報取得と競合してAPI側が正しく処理しない
-        raise NotSupported()
+        raise NotSupported("This endpoint is not supported due to a bug in the API.")
 
     async def get_grade_data(self, school_id: int, grade_id: int) -> list[RawClassData]:
         data = await self.get_request(f"schools/{school_id}/{grade_id}")
@@ -93,7 +95,7 @@ class HTTPClient:
 
     async def get_schools_from_discord_user(self, discord_user_id: int):
         # 現行バージョンでは廃止された。HSS.pyではv1.0で削除予定
-        raise NotSupported()
+        raise NotSupported("This endpoint was deleted from the API and not supported.")
 
     # PATCH methods
 
