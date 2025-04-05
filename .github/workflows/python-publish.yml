@@ -16,12 +16,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    permissions:
+        id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+    
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+      
 
     - name: Install dependencies
       run: >-
@@ -32,7 +35,7 @@ jobs:
     # We do this, since failures on test.pypi aren't that bad
     - name: Publish to Test PyPI
       if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.test_pypi_password }}
@@ -40,7 +43,7 @@ jobs:
 
     - name: Publish distribution 📦 to PyPI
       if: startsWith(github.event.ref, 'refs/tags') || github.event_name == 'release'
-      uses: pypa/gh-action-pypi-publish@master
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
         password: ${{ secrets.pypi_password }}
