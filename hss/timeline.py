@@ -28,7 +28,7 @@ class Lesson:
         if isinstance(other, Lesson):
             return (other.name == self.name and other.place == self.place
                     and other.is_event == self.is_event)
-        raise NotImplemented
+        raise NotImplementedError
 
     def copy(self) -> "Lesson":
         return Lesson(self.name, self.place, self.is_event)

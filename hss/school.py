@@ -54,7 +54,7 @@ class School:
 
         owner_id = int(details["ownerId"])
         if owner_id in self.client._user_id_cache:
-            self.owner: User = client.get_user(owner_id)  # type: ignore
+            self.owner: User = self.client.get_user(owner_id)  # type: ignore
         else:
             self.client._user_id_cache.add(owner_id)
             self.client._users[owner_id] = self.owner = User(self.client, owner_id)
@@ -63,7 +63,7 @@ class School:
         for i in details["admins"]:
             id = int(i)
             if id in self.client._user_id_cache:
-                self.admins.append(client.get_user(id))  # type: ignore
+                self.admins.append(self.client.get_user(id))  # type: ignore
             else:
                 self.client._user_id_cache.add(id)
                 us = self.client._users[id] = User(self.client, id)

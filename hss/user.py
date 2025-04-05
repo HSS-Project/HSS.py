@@ -34,7 +34,7 @@ class User:
             del self.client._users[self.id]
             return
         self.name = data["username"]
-        self.is_discord = data["discordAccount"]
+        self.is_discord = data.get("discordAccount", False)
         self.is_bot = data["isBot"]
         self.developer = data["developer"]
         self.is_partial = True

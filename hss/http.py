@@ -7,6 +7,7 @@ from .types import (
     RawHomeworkData, DayTypeRevDict
 )
 from .errors import HTTPException, handle_http_error, NotSupported
+import traceback
 
 if TYPE_CHECKING:
     from .timeline import EventTime
@@ -37,7 +38,8 @@ class HTTPClient:
     async def return_with_error_handler(self, response: aiohttp.ClientResponse):
         try:
             json = await response.json()
-        except:
+        except Exception:
+            traceback.print_exc()
             json = {}
         if response.ok and "status" in json:
             if json["status"] != "success":
@@ -48,7 +50,7 @@ class HTTPClient:
                 raise HTTPException("Unknown API Error has occurred:", json)
             # エラーの振り分け
             handle_http_error(response.status, json["message"])
-            raise NotImplemented  # NoReturnを型チェッカーがNoneと勘違いするので仮置き
+            raise NotImplementedError  # NoReturnを型チェッカーがNoneと勘違いするので仮置き
 
     async def get_request(self, endpoint: str):
         url = BASE_URL + endpoint
