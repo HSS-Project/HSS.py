@@ -8,15 +8,19 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+# requirements.txtから必要な依存関係を読み込む
+with open(path.join(here, 'requirements.txt'), encoding="utf-8") as f:
+    requirements = f.read().splitlines()
+
 setup(
-    name='HSS.py', # パッケージ名(プロジェクト名)
-    packages=['HSS'], # パッケージ内(プロジェクト内)のパッケージ名をリスト形式で指定
+    name='hss.py', # パッケージ名(プロジェクト名)
+    packages=['hss'], # パッケージ内(プロジェクト内)のパッケージ名をリスト形式で指定
 
     version='1.2.1', # バージョン
 
     license='MIT', # ライセンス
 
-    install_requires=['requests'], # pip installする際に同時にインストールされるパッケージ名をリスト形式で指定
+    install_requires=requirements, # pip installする際に同時にインストールされるパッケージ名をリスト形式で指定
 
     author='HSS-Project', # パッケージ作者の名前
     author_email='kazuma1112@munesky.net', # パッケージ作者の連絡先メールアドレス
